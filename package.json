@@ -1,0 +1,19 @@
+{
+  "name": "owool2019",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "shopify-pipeline": "^0.2.3"
+  },
+  "scripts": {
+    "serve": "shopify-pipeline serve",
+    "build": "shopify-pipeline build",
+    "deploy": "shopify-pipeline build --deploy",
+    "test": "shopify-pipeline test --coverage"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+}
