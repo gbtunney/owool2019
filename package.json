@@ -2,14 +2,37 @@
   "name": "owool2019",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "shopify-pipeline": "^0.2.3"
-  },
+  "author": "Gillian & Jocelyn Tunney",
+  "description": "Owool using Brooklyn as parent theme",
   "scripts": {
     "serve": "shopify-pipeline serve",
     "build": "shopify-pipeline build",
     "deploy": "shopify-pipeline build --deploy",
     "test": "shopify-pipeline test --coverage"
+  },
+  "dependencies": {
+    "modernizr": "^3.6.0",
+    "node-sass": "^4.9.2",
+    "node-sass-json-importer": "^3.3.1"
+  },
+  "devDependencies": {
+    "shopify-pipeline": "^0.2.3",
+    "breakpoint-sass": "^2.7.1",
+    "breakpoint-slicer": "^2.0.0",
+    "chroma-sass": "^1.2.6",
+    "compass-mixins": "^0.12.10",
+    "jquery": ">=3.3.1",
+    "modernizr": "^3.6.0",
+    "modularscale-sass": "^3.0.5",
+    "sass-bem-constructor": "^1.1.0",
+    "sass-dry": "^1.0.0",
+    "sass-toolkit": "^2.10.2",
+    "sassdash": "^0.9.0",
+    "sassytester": "^1.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gbtunney/owool2019.git"
   },
   "babel": {
     "presets": [
