@@ -1,0 +1,442 @@
+{% comment %}
+  Set hero as enabled so JS is loaded at end of index.liquid.
+  Also set variables to control JS settings and appearance.
+
+  hero_full_height variable is also available in Header section.
+{% endcomment %}
+{% assign hero_full_height = true %}
+{% assign hero_parallax = true %}
+
+{% comment %}
+  Change the hero slideshow's dots color based on the slides' text color.
+{% endcomment %}
+<style>
+  .hero-slideshow.slick-slider .slick-dots li.slick-active button:before{
+    background: {{ section.settings.slide_text_color }};
+    border-color: transparent;
+  }
+  .hero-slideshow.slick-slider .slick-dots li button:before{
+    background: transparent;
+    border-color: {{ section.settings.slide_text_color }};
+  }
+</style>
+
+{% if hero_full_height %}
+  {% comment %}
+    Set home page header text color (store name, menu links)
+    to be the same as the slideshow text color (only if there
+    is a slideshow, otherwise it's the global heading text color)
+  {% endcomment %}
+  <style>
+    {% if section.blocks.size > 0 %}
+      .site-nav__link, .site-header__logo a, .site-nav__link:hover, .site-header__logo a:hover {
+        color: {{ section.settings.slide_text_color }};
+      }
+      .burger-icon {
+        background: {{ section.settings.slide_text_color }};
+      }
+    {% else %}
+      .site-nav__link, .site-header__logo a, .site-nav__link:hover, .site-header__logo a:hover {
+        color: {{ settings.color_headings }};
+      }
+      .burger-icon {
+        background: {{ settings.color_headings }};
+      }
+    {% endif %}
+  </style>
+{% endif %}
+
+{% comment %}
+  If hero is first section on homepage, add class that sets
+  negative top-margin for alignment and force full height.
+{% endcomment %}
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section">
+  {% if section.blocks.size > 0 %}
+    <div class="hero-{{ section.id }} hero{% if hero_full_height %} hero--full-height{% endif %} hero--first" id="Hero"{% if hero_full_height %} data-fullscreen="true"{% endif %}{% if hero_parallax %}data-parallax="true"{% endif %} data-autoplay="{{ section.settings.hero_home_auto }}" data-autoplayspeed="{{ section.settings.home_hero_auto_speed }}">
+      {% for block in section.blocks %}
+
+          <div class="hero__slide slide--{{ block.id }}{% if block.settings.image == blank %} slide--placeholder{% endif %}" data-color="{{ section.settings.slide_text_color }}" style="color: {{ section.settings.slide_text_color }};" {{ block.shopify_attributes }}>
+            {% if hero_full_height %}
+              {% if block.settings.image == blank %}
+                <div class="placeholder-background">
+                  {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                  {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% else %}
+                <noscript>
+                  {% if forloop.first == true %}
+                    <div class="hero__image-no-js"{% if block.settings.image %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}');"{% endif %}></div>
+                  {% endif %}
+                </noscript>
+                {% assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+                <img class="hero__image hero__image--{{ block.id }} lazyload fade-in{% unless forloop.first == true %} lazypreload{% endunless %}"
+                  {% if forloop.first == true %}
+                    src="{{ block.settings.image | img_url: '300x' }}"
+                  {% endif %}
+                  data-src="{{ img_url }}"
+                  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+                  data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                  data-sizes="auto"
+                  data-parent-fit="cover"
+                  alt="{{ block.settings.image.alt | escape }}">
+              {% endif %}
+            {% else %}
+              {% if block.settings.image != blank %}
+                <noscript>
+                  {% if forloop.first == true %}
+                    <div class="hero__image-no-js"{% if block.settings.image %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}');"{% endif %}></div>
+                  {% endif %}
+                </noscript>
+                <div class="hero__image">
+                  {% assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+                  <img class="hero__image lazyload fade-in"
+                    src="{{ block.settings.image | img_url: '300x' }}"
+                    data-src="{{ img_url }}"
+                    data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+                    data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                    data-sizes="auto"
+                    data-parent-fit="contain"
+                    alt="{{ block.settings.image.alt | escape }}">
+                </div>
+              {% else %}
+                <div class="hero__image">
+                  {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                  {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            {% endif %}
+
+            {% comment %}
+              Apply a color overlay on a per-slide basis.
+            {% endcomment %}
+            <style>
+              .slide--{{ block.id }} .slideshow__overlay:before {
+                background-color: {{ block.settings.color_image_overlay }};
+                opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.00 }};
+              }
+            </style>
+            <div class="hero__text-wrap slideshow__overlay">
+              <div class="hero__text-align">
+                <div class="hero__text-content">
+                  {% unless block.settings.slide_subheading == blank %}
+                    <p class="hero__subtitle">
+                      {{ block.settings.slide_subheading | escape }}
+                    </p>
+                  {% endunless %}
+                  {% unless block.settings.slide_heading == blank %}
+                    <h2 class="h1 hero__title">
+                      {{ block.settings.slide_heading | escape }}
+                    </h2>
+                  {% endunless %}
+                  {% unless block.settings.slide_cta == blank %}
+                    <a href="{{ block.settings.slide_link }}" style="color: {{ section.settings.slide_button_label_color }}; background-color: {{ section.settings.slide_button_background_color }}" class="btn hero__cta">
+                      {{ block.settings.slide_cta | escape }} <span class="icon icon-arrow-right" aria-hidden="true"></span>
+                    </a>
+                  {% endunless %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Slideshow",
+    "en": "Slideshow",
+    "es": "Diapositivas",
+    "fr": "Diaporama",
+    "it": "Presentazione",
+    "ja": "スライドショー",
+    "pt-BR": "Apresentação de slides"
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hero_home_auto",
+      "label": {
+        "de": "Automatisch zwischen Folien rotieren",
+        "en": "Auto rotate between slides",
+        "es": "Rotar automáticamente entre diapositivas",
+        "fr": "Rotation automatique entre les diapositives",
+        "it": "Transizione automatica delle slide",
+        "ja": "スライドの自動切り替え",
+        "pt-BR": "Rodar automaticamente entre slides"
+      },
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "home_hero_auto_speed",
+      "label": {
+        "de": "Anzeige der nächsten Folie alle",
+        "en": "Slide changes every",
+        "es": "La diapositiva cambia cada",
+        "fr": "La diapositive change toutes les",
+        "it": "La slide cambia ogni",
+        "ja": "スライド変更の頻度",
+        "pt-BR": "O slide muda a cada"
+      },
+      "options": [
+        {
+          "value": "5000",
+          "label": {
+            "de": "5 Sekunden",
+            "en": "5 seconds",
+            "es": "5 segundos",
+            "fr": "5 secondes",
+            "it": "5 secondi",
+            "ja": "5秒",
+            "pt-BR": "5 segundos"
+          }
+        },
+        {
+          "value": "7000",
+          "label": {
+            "de": "7 Sekunden",
+            "en": "7 seconds",
+            "es": "7 segundos",
+            "fr": "7 secondes",
+            "it": "7 secondi",
+            "ja": "7秒",
+            "pt-BR": "7 segundos"
+          }
+        },
+        {
+          "value": "10000",
+          "label": {
+            "de": "10 Sekunden",
+            "en": "10 seconds",
+            "es": "10 segundos",
+            "fr": "10 secondes",
+            "it": "10 secondi",
+            "ja": "10秒",
+            "pt-BR": "10 segundos"
+          }
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "slide_text_color",
+      "label": {
+        "de": "Text",
+        "en": "Text",
+        "es": "texto",
+        "fr": "Texte",
+        "it": "Testo",
+        "ja": "テキスト",
+        "pt-BR": "Texto"
+      },
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "slide_button_label_color",
+      "label": {
+        "de": "Schaltflächenbezeichnung",
+        "en": "Button label",
+        "es": "Etiqueta de botón",
+        "fr": "Texte du bouton",
+        "it": "Etichetta pulsante",
+        "ja": "ボタンラベル",
+        "pt-BR": "Etiqueta do botão"
+      },
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "slide_button_background_color",
+      "label": {
+        "de": "Schaltfläche",
+        "en": "Button",
+        "es": "Botón",
+        "fr": "Bouton",
+        "it": "Pulsante",
+        "ja": "ボタン",
+        "pt-BR": "Botão"
+      },
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": {
+        "de": "Folie",
+        "en": "Slide",
+        "es": "Diapositiva",
+        "fr": "Diapositive",
+        "it": "Slide",
+        "ja": "スライド",
+        "pt-BR": "Slide"
+      },
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": {
+            "de": "Bild",
+            "en": "Image",
+            "es": "Imagen",
+            "fr": "Image",
+            "it": "Immagine",
+            "ja": "画像",
+            "pt-BR": "Imagem"
+          }
+        },
+        {
+          "type": "header",
+          "content": {
+            "de": "Overlay",
+            "en": "Overlay",
+            "es": "Superposición",
+            "fr": "Superposition",
+            "it": "Sovrapposizione",
+            "ja": "オーバーレイ",
+            "pt-BR": "Sobreposição"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_image_overlay",
+          "label": {
+            "de": "Overlay",
+            "en": "Overlay",
+            "es": "Superposición",
+            "fr": "Superposition",
+            "it": "Sovrapposizione",
+            "ja": "オーバーレイ",
+            "pt-BR": "Sobreposição"
+          },
+          "default": "#3d4246"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "label": {
+            "de": "Opazität",
+            "en": "Opacity",
+            "es": "Opacidad",
+            "fr": "Opacité",
+            "it": "Opacità",
+            "ja": "不透過率",
+            "pt-BR": "Opacidade"
+          },
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": {
+            "de": "%",
+            "en": "%",
+            "es": "%",
+            "fr": "%",
+            "it": "%",
+            "ja": "%",
+            "pt-BR": "%"
+          },
+          "default": 25
+        },
+        {
+          "type": "header",
+          "content": {
+            "de": "Text",
+            "en": "Text",
+            "es": "texto",
+            "fr": "Texte",
+            "it": "Testo",
+            "ja": "テキスト",
+            "pt-BR": "Texto"
+          }
+        },
+        {
+          "type": "text",
+          "id": "slide_subheading",
+          "label": {
+            "de": "Untertiteltext",
+            "en": "Subheading text",
+            "es": "Texto del subtítulo",
+            "fr": "Texte du sous-titre",
+            "it": "Testo del sottotitolo",
+            "ja": "小見出しテキスト",
+            "pt-BR": "Texto do subtítulo"
+          },
+          "default": {
+            "de": "Für den Einstieg:",
+            "en": "An introductory",
+            "es": "Frase introductoria",
+            "fr": "Introduction",
+            "it": "Come introduzione",
+            "ja": "紹介",
+            "pt-BR": "Uma introdução"
+          }
+        },
+        {
+          "type": "text",
+          "id": "slide_heading",
+          "label": {
+            "de": "Überschriftentext",
+            "en": "Heading text",
+            "es": "Texto del encabezado",
+            "fr": "Texte du titre",
+            "it": "Testo del titolo",
+            "ja": "見出しテキスト",
+            "pt-BR": "Texto do título"
+          },
+          "default": {
+            "de": "Hero-Banner",
+            "en": "Hero Banner",
+            "es": "Banner destacado",
+            "fr": "Bannière de premier plan",
+            "it": "Banner hero",
+            "ja": "ヒーローバナー",
+            "pt-BR": "Banner do Hero"
+          }
+        },
+        {
+          "type": "text",
+          "id": "slide_cta",
+          "label": {
+            "de": "Schaltflächentext",
+            "en": "Button text",
+            "es": "Botón de texto",
+            "fr": "Texte du bouton",
+            "it": "Testo pulsante",
+            "ja": "ボタンテキスト",
+            "pt-BR": "Texto do botão"
+          },
+          "default": {
+            "de": "Jetzt shoppen",
+            "en": "Shop now",
+            "es": "Compra ya",
+            "fr": "Acheter maintenant",
+            "it": "Acquista ora",
+            "ja": "今すぐ購入",
+            "pt-BR": "Compre agora"
+          }
+        },
+        {
+          "type": "url",
+          "id": "slide_link",
+          "label": {
+            "de": "Folienlink",
+            "en": "Slide link",
+            "es": "Enlace de la diapositiva",
+            "fr": "Lien de diapositive",
+            "it": "Link slide",
+            "ja": "スライドリンク",
+            "pt-BR": "Link do slide"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
