@@ -5,3 +5,36 @@
 {{ content_for_layout }}
 
 <!-- data-src will be the URL to the generated svg sprite -->
+
+{% comment %}
+Template-specific js
+{% endcomment %}
+<script>
+    {% if resetPassword %}
+    $(function() {
+        timber.resetPasswordSuccess();
+    });
+    {% endif %}
+</script>
+
+{% comment %}
+Ajaxify your cart with this plugin.
+Documentation:
+- http://shopify.com/timber#ajax-cart
+{% endcomment %}
+  {% if settings.cart_type == 'drawer' %}
+      {% include 'ajax-cart-template' %}
+  {% endif %}
+
+  {% if template.name == 'product' or template.name == 'index' %}
+      <script>
+          // Override default values of shop.strings for each template.
+          // Alternate product templates can change values of
+          // add to cart button, sold out, and unavailable states here.
+          /*theme.productStrings = {
+              addToCart: {{ 'products.product.add_to_cart' | t | json }},
+              soldOut: {{ 'products.product.sold_out' | t | json }},
+              unavailable: {{ 'products.product.unavailable' | t | json }}
+          }*/
+      </script>
+  {% endif %}
