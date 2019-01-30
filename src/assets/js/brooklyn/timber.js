@@ -1,4 +1,6 @@
-export const timber = (function () {
+/*eslint-disable */
+
+export const timber = (function() {
     
     // Keep this variable private inside this closure scope
     
@@ -7,8 +9,7 @@ export const timber = (function () {
     
     return {
         
-        
-        initCache : function() {
+        initCache: function() {
             timber.cache = {
                 // General
                 $html: $('html'),
@@ -30,7 +31,7 @@ export const timber = (function () {
             };
         },
         
-        init : function() {
+        init: function() {
             timber.initCache();
             timber.accessibleNav();
             timber.drawersInit();
@@ -38,7 +39,7 @@ export const timber = (function () {
             timber.loginForms();
         },
         
-        accessibleNav : function() {
+        accessibleNav: function() {
             var classes = {
                 active: 'nav-hover',
                 focus: 'nav-focus',
@@ -70,14 +71,14 @@ export const timber = (function () {
                 var evtType = evt.type;
                 var $dropdowns = $nav.find(selectors.active);
                 
-                if (!$el.hasClass(classes.active)) {
+                if (!$el.hasClass(classes.active)){
                     // force stop the click from happening
                     evt.preventDefault();
                     evt.stopImmediatePropagation();
                 }
                 
                 // Make sure we close any opened same level dropdown before opening a new one
-                if (evtType === 'touchstart' && $dropdowns.length > 0) {
+                if (evtType === 'touchstart' && $dropdowns.length > 0){
                     hideDropdown($el);
                 }
                 
@@ -110,7 +111,7 @@ export const timber = (function () {
                 
                 $allLinks.attr('tabindex', '');
                 
-                if ($previousItem.hasClass(classes.hasDropdown)) {
+                if ($previousItem.hasClass(classes.hasDropdown)){
                     $previousItem.find(selectors.dropdown + ' a').attr('tabindex', -1);
                 }
                 
@@ -153,7 +154,7 @@ export const timber = (function () {
             function addFocus($el) {
                 $el.addClass(classes.focus);
                 
-                if ($el.attr('aria-expanded') !== undefined) {
+                if ($el.attr('aria-expanded') !== undefined){
                     $el.attr('aria-expanded', true);
                 }
             }
@@ -163,7 +164,7 @@ export const timber = (function () {
                 
                 $subMenuLinks.attr('tabindex', -1);
                 
-                if ($el.attr('aria-expanded') !== undefined) {
+                if ($el.attr('aria-expanded') !== undefined){
                     $el.attr('aria-expanded', false);
                 }
             }
@@ -176,7 +177,7 @@ export const timber = (function () {
                 $.each($dropdowns, function() {
                     var $dropdown = $(this);
                     var dropdownOffset = $dropdown.offset().left + $dropdown.width();
-                    if (dropdownOffset > viewportSize) {
+                    if (dropdownOffset > viewportSize){
                         $dropdown.addClass(classes.outside);
                     }
                 });
@@ -192,20 +193,20 @@ export const timber = (function () {
                 }, 250);
             });
         },
-        drawersInit : function() {
+        drawersInit: function() {
             timber.LeftDrawer = new timber.Drawers('NavDrawer', 'left');
-            if (theme.settings.cartType === 'drawer') {
+            if (theme.settings.cartType === 'drawer'){
                 timber.RightDrawer = new timber.Drawers('CartDrawer', 'right', {
                     onDrawerOpen: ajaxCart.load
                 });
             }
         },
         
-        getHash : function() {
+        getHash: function() {
             return window.location.hash;
         },
         
-        responsiveVideos : function() {
+        responsiveVideos: function() {
             var $iframeVideo = $(
                 'iframe[src*="youtube.com/embed"], iframe[src*="player.vimeo"]'
             );
@@ -213,7 +214,7 @@ export const timber = (function () {
             
             $iframeVideo.each(function() {
                 // Add wrapper to make video responsive
-                if (!$(this).parents('.video-wrapper').length) {
+                if (!$(this).parents('.video-wrapper').length){
                     $(this).wrap('<div class="video-wrapper"></div>');
                 }
             });
@@ -227,7 +228,7 @@ export const timber = (function () {
             });
         },
         
-        loginForms : function() {
+        loginForms: function() {
             function showRecoverPasswordForm() {
                 timber.cache.$recoverPasswordForm.show();
                 timber.cache.$customerLoginForm.hide();
@@ -249,12 +250,12 @@ export const timber = (function () {
             });
             
             // Allow deep linking to recover password form
-            if (timber.getHash() === '#recover') {
+            if (timber.getHash() === '#recover'){
                 showRecoverPasswordForm();
             }
         },
         
-        resetPasswordSuccess : function() {
+        resetPasswordSuccess: function() {
             timber.cache.$passwordResetSuccess.show();
         },
         
@@ -262,7 +263,7 @@ export const timber = (function () {
           Drawer modules
           - Docs http://shopify.github.io/Timber/#drawers
         ==============================================================================*/
-        Drawers :(function() {
+        Drawers: (function() {
             var Drawer = function(id, position, options) {
                 var defaults = {
                     close: '.js-drawer-close',
@@ -285,7 +286,7 @@ export const timber = (function () {
                 
                 this.$drawer = $('#' + id);
                 
-                if (!this.$drawer.length) {
+                if (!this.$drawer.length){
                     return false;
                 }
                 
@@ -311,8 +312,8 @@ export const timber = (function () {
                 var $otherDrawers = $('.drawer').not(this.$drawer);
                 
                 // don't open an opened drawer
-                if (this.drawerIsOpen) {
-                    if (evt) {
+                if (this.drawerIsOpen){
+                    if (evt){
                         evt.preventDefault();
                     }
                     return;
@@ -321,21 +322,21 @@ export const timber = (function () {
                 // Close other drawers if they are open
                 var self = this;
                 $otherDrawers.each(function() {
-                    if (!$(this).hasClass(self.config.openClass)) {
+                    if (!$(this).hasClass(self.config.openClass)){
                         return;
                     }
                     
-                    if ($(this).hasClass(self.config.drawerLeftClass)) {
+                    if ($(this).hasClass(self.config.drawerLeftClass)){
                         timber.LeftDrawer.close();
                     }
                     
-                    if ($(this).hasClass(self.config.drawerRightClass)) {
+                    if ($(this).hasClass(self.config.drawerRightClass)){
                         timber.RightDrawer.close();
                     }
                 });
                 
                 // Prevent following href if link is clicked
-                if (evt) {
+                if (evt){
                     evt.preventDefault();
                 } else {
                     externalCall = true;
@@ -343,13 +344,13 @@ export const timber = (function () {
                 
                 // Without this, the drawer opens, the click event bubbles up to $nodes.page
                 // which closes the drawer.
-                if (evt && evt.stopPropagation) {
+                if (evt && evt.stopPropagation){
                     evt.stopPropagation();
                     // save the source of the click, we'll focus to this on close
                     this.$activeSource = $(evt.currentTarget);
                 }
                 
-                if (this.drawerIsOpen && !externalCall) {
+                if (this.drawerIsOpen && !externalCall){
                     return this.close();
                 }
                 
@@ -375,13 +376,13 @@ export const timber = (function () {
                 if (
                     this.config.onDrawerOpen &&
                     typeof this.config.onDrawerOpen === 'function'
-                ) {
-                    if (!externalCall) {
+                ){
+                    if (!externalCall){
                         this.config.onDrawerOpen();
                     }
                 }
                 
-                if (this.$activeSource && this.$activeSource.attr('aria-expanded')) {
+                if (this.$activeSource && this.$activeSource.attr('aria-expanded')){
                     this.$activeSource.attr('aria-expanded', 'true');
                 }
                 
@@ -390,19 +391,19 @@ export const timber = (function () {
             
             Drawer.prototype.close = function(evt) {
                 // don't close a closed drawer
-                if (!this.drawerIsOpen) {
+                if (!this.drawerIsOpen){
                     return;
                 }
                 
-                if (evt.keyCode !== 27) {
+                if (evt.keyCode !== 27){
                     evt.preventDefault();
                 }
                 // deselect any focused form elements
                 $(document.activeElement).trigger('blur');
                 
                 // Ensure closing transition is applied to moved elements, like the nav
-                this.nodes.$moved.prepareTransition({ disableExisting: true });
-                this.$drawer.prepareTransition({ disableExisting: true });
+                this.nodes.$moved.prepareTransition({disableExisting: true});
+                this.$drawer.prepareTransition({disableExisting: true});
                 
                 this.nodes.$parent.removeClass(
                     this.config.dirOpenClass + ' ' + this.config.openClass
@@ -417,7 +418,7 @@ export const timber = (function () {
                     namespace: 'drawer_focus'
                 });
                 
-                if (this.$activeSource && this.$activeSource.attr('aria-expanded')) {
+                if (this.$activeSource && this.$activeSource.attr('aria-expanded')){
                     this.$activeSource.attr('aria-expanded', 'false');
                 }
                 
@@ -437,7 +438,7 @@ export const timber = (function () {
                     ? 'focusin.' + options.namespace
                     : 'focusin';
                 
-                if (!options.$elementToFocus) {
+                if (!options.$elementToFocus){
                     options.$elementToFocus = options.$container;
                     options.$container.attr('tabindex', '-1');
                 }
@@ -448,7 +449,7 @@ export const timber = (function () {
                     if (
                         options.$container[0] !== evt.target &&
                         !options.$container.has(evt.target).length
-                    ) {
+                    ){
                         options.$container.focus();
                     }
                 });
@@ -466,7 +467,7 @@ export const timber = (function () {
                     ? 'focusin.' + options.namespace
                     : 'focusin';
                 
-                if (options.$container && options.$container.length) {
+                if (options.$container && options.$container.length){
                     options.$container.removeAttr('tabindex');
                 }
                 
@@ -480,7 +481,7 @@ export const timber = (function () {
                 });
                 
                 this.$drawer.on('click.drawer', function(event) {
-                    if ($(this).hasClass('drawer--left')) {
+                    if ($(this).hasClass('drawer--left')){
                         event.stopPropagation();
                     }
                 });
@@ -496,20 +497,20 @@ export const timber = (function () {
                     $.proxy(function(evt) {
                         // The hamburger 'open' button changes to a 'close' button when the drawer
                         // is open. Clicking on it will close the drawer.
-                        if (this.$activeSource !== undefined) {
+                        if (this.$activeSource !== undefined){
                             this.$activeSource.on(
                                 'click.drawer',
                                 $.proxy(function() {
                                     if (
                                         !this.$activeSource.hasClass(this.config.openButtonLeftClass)
-                                    ) {
+                                    ){
                                         return;
                                     }
                                     this.close();
                                 }, this)
                             );
                         }
-                        if (evt.keyCode === 27) {
+                        if (evt.keyCode === 27){
                             this.close(evt);
                         }
                     }, this)
@@ -517,7 +518,7 @@ export const timber = (function () {
             };
             
             Drawer.prototype.unbindEvents = function() {
-                if (this.$activeSource !== undefined) {
+                if (this.$activeSource !== undefined){
                     this.$activeSource.off('.drawer');
                 }
                 this.nodes.$page.off('.drawer');

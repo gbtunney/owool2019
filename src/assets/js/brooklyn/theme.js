@@ -5,30 +5,543 @@ import $ from 'jquery';
 jQuery = window.jQuery = $;
 window.$ = $;
 
+import enquire from 'enquire-js/main.js';
+import {debounce as _debounce} from 'lodash';
+import handlebars from 'handlebars/dist/handlebars.js';
+
 export const theme = (function() {
     
     // Keep this variable private inside this closure scope
-    var myGrades = [93, 95, 88, 0, 55, 91];
-    
-    let variables = {
-        productPageLoad: false,
-        productPageSticky: true,
-        
-        // Breakpoints from src/stylesheets/global/variables.scss.liquid
-        mediaQuerySmall: 'screen and (max-width: 590px)',
-        mediaQueryMedium: 'screen and (min-width: 591px) and (max-width: 768px)',
-        mediaQueryMediumUp: 'screen and (min-width: 591px)',
-        mediaQueryLarge: 'screen and (min-width: 769px)',
-        bpSmall: false
-    };
+    var strings = "";
     // Expose these functions via an interface while hiding
     // the implementation of the module within the function() block
     
     return {
+        
+        debounce: function(n, t, u) {
+            return _debounce(n, t, u);
+        },
+        
+        Sections: function () {
+        
+          
+        },
+        
+        variables: {
+            productPageLoad: false,
+            productPageSticky: true,
+            
+            // Breakpoints from src/stylesheets/global/variables.scss.liquid
+            mediaQuerySmall: 'screen and (max-width: 590px)',
+            mediaQueryMedium: 'screen and (min-width: 591px) and (max-width: 768px)',
+            mediaQueryMediumUp: 'screen and (min-width: 591px)',
+            mediaQueryLarge: 'screen and (min-width: 769px)',
+            bpSmall: false
+        },
+        
         Product: (function() {
             function Product(container) {
                 var $window = $(window);
+
+                this.prototype = _.assignIn({}, this.prototype, {
+                    initProductVariant: function() {
+                        var options = {
+                            $container: this.$container,
+                            enableHistoryState:
+                            this.$container.data('enable-history-state') || false,
+                            singleOptionSelector: this.selectors.singleOptionSelector,
+                            originalSelectorId: this.selectors.originalSelectorId,
+                            product: this.productSingleObject
+                        };
+            
+                        this.variants = new slate.Variants(options);
+                        this.$container.on(
+                            'variantChange' + this.settings.namespace,
+                            this.productPage.bind(this)
+                        );
+                        this.$container.on(
+                            'variantImageChange' + this.settings.namespace,
+                            this.showVariantImage.bind(this)
+                        );
+                    },
+        
+                    initBreakpoints: function() {
+                        var self = this;
+                        var $container = self.$container;
+                        self.zoomType = $container.data('image-zoom-type');
+            
+                        enquire.register(theme.variables.mediaQuerySmall, {
+                            match: function() {
+                                self.createImageCarousel();
+                                if (self.zoomType){
+                                    if ($(self.selectors.productImagePhoto).length){
+                                        // remove event handlers for product zoom on mobile
+                                        $(self.selectors.productImagePhoto).off();
+                                    }
+                                }
+                            },
+                            unmatch: function() {
+                                self.destroyImageCarousel();
+                                self.reorderImages();
+                                if (self.zoomType){
+                                    // reinit product zoom
+                                    self.productImageZoom();
+                                }
+                            }
+                        });
+                    },
+        
+                    stringOverrides: function() {
+                        // Override defaults in theme.strings with potential
+                        // template overrides
+            
+                        theme.productStrings = theme.productStrings || {};
+                        $.extend(strings, theme.productStrings);
+                    },
+        
+                    resizeElements: function() {
+                        $(
+                            this.selectors.productGridImages,
+                            this.$container
+                        ).imagesLoaded(function() {
+                            $(this.selectors.productGridImages, this.$container)
+                            .css('height', 'auto')
+                            .equalHeights();
+                        });
+                    },
+        
+                    showVariantImage: function(evt) {
+                        var variant = evt.variant;
+                        var $newImage = $(
+                            '.product-single__photo[data-image-id="' +
+                            variant.featured_image.id +
+                            '"]'
+                        );
+                        var imageIndex;
+            
+                        if (variant && variant.featured_image){
+                            this.setActiveThumbnail(variant.featured_image.id);
+                        }
+            
+                        if (theme.variables.bpSmall){
+                            // Switch carousel slide, unless it's the first photo on load
+                            imageIndex = $newImage.closest('.slick-slide').attr('index');
+                            // Navigate to slide unless it's the first photo on load
+                            // If there is no index, slider is not initalized.
+                            if (_.isUndefined(imageIndex)){
+                                return;
+                            }
                 
+                            if (imageIndex !== 0 || theme.variables.productPageLoad){
+                                $(this.selectors.productImages, this.$container).slickGoTo(
+                                    imageIndex
+                                );
+                            }
+                            // Switch image variant on thumbnail layout for desktop view;
+                            // When a image variant is updated on mobile view, update the
+                            // desktop view also.
+                            if (!this.$container.data('scroll-to-image')){
+                                this.switchImage(variant.featured_image.id);
+                            }
+                        } else {
+                            if (this.$container.data('scroll-to-image')){
+                                imageIndex = $newImage.closest('.slick-slide').index();
+                                // Scroll to/reorder image unless it's the first photo on load
+                                if (imageIndex !== 0 || theme.variables.productPageLoad){
+                                    if (theme.variables.productPageSticky){
+                                        // Scroll to variant image
+                                        $('html, body').animate(
+                                            {
+                                                scrollTop: $newImage.offset().top
+                                            },
+                                            250
+                                        );
+                                    } else {
+                                        // Move selected variant image to top, preventing scrolling
+                                        var currentScroll = $(document).scrollTop();
+                                        $newImage
+                                        .closest(
+                                            $(
+                                                this.selectors.productImagePhotoFlexWrapper,
+                                                this.$container
+                                            )
+                                        )
+                                        .prependTo($(this.selectors.productImages, this.$container));
+                                        $(document).scrollTop(currentScroll);
+                                    }
+                                }
+                            } else {
+                                // Thumbnail layout
+                                // Move selected variant image to top
+                                $newImage
+                                .closest(
+                                    $(this.selectors.productImagePhotoFlexWrapper, this.$container)
+                                )
+                                .prependTo($(this.selectors.productImages, this.$container));
+                                // Switch image variant for thumnail layout
+                                this.switchImage(variant.featured_image.id);
+                            }
+                        }
+            
+                        if (!theme.variables.productPageLoad){
+                            theme.variables.productPageLoad = true;
+                        }
+                    },
+        
+                    switchImage: function(imageId) {
+                        $(this.selectors.productImagePhotoContainer, this.$container).addClass(
+                            'hide'
+                        );
+                        $(this.selectors.productImagePhotoContainer, this.$container)
+                        .filter('#ProductImageWrapper-' + imageId)
+                        .removeClass('hide');
+                    },
+        
+                    reorderImages: function() {
+                        if (this.$container.data('scroll-to-image')) return;
+                        var $newImage = $(
+                            this.selectors.productImagePhotoContainer,
+                            this.$container
+                        ).not('.hide');
+                        $newImage
+                        .closest(
+                            $(this.selectors.productImagePhotoFlexWrapper, this.$container)
+                        )
+                        .prependTo($(this.selectors.productImages, this.$container));
+                    },
+        
+                    productThumbnailSwitch: function() {
+                        var self = this;
+                        var $productThumbnails = $('#ProductThumbs', this.$container).find(
+                            this.selectors.productThumbnail
+                        );
+            
+                        if ($productThumbnails.length){
+                            // Switch the main image with one of the thumbnails
+                            // Note: this does not change the variant selected, just the image
+                            $productThumbnails.on('click', function(evt) {
+                                evt.preventDefault();
+                                var newImageId = $(this).attr('data-image-id');
+                                var $newImage = $(
+                                    '.product-single__photo[data-image-id="' + newImageId + '"]'
+                                );
+                    
+                                self.switchImage(newImageId);
+                                self.setActiveThumbnail(newImageId);
+                    
+                                // Thumbnail layout
+                                // Move selected featured image to top
+                                $newImage
+                                .closest(
+                                    $(self.selectors.productImagePhotoFlexWrapper, self.$container)
+                                )
+                                .prependTo($(self.selectors.productImages, self.$container));
+                            });
+                        }
+                    },
+        
+                    setActiveThumbnail: function(imageId) {
+                        var $productThumbnails = $('#ProductThumbs', this.$container).find(
+                            this.selectors.productThumbnail
+                        );
+            
+                        if ($productThumbnails.length){
+                            var activeClass = 'active-thumb';
+                            var $thumbnail = $(
+                                this.selectors.productThumbnail + "[data-image-id='" + imageId + "']",
+                                this.$container
+                            );
+                
+                            $productThumbnails.removeClass(activeClass);
+                            $thumbnail.addClass(activeClass);
+                        }
+                    },
+        
+                    productImageZoom: function() {
+                        if (
+                            !$(this.selectors.productImagePhoto, this.$container).length ||
+                            theme.variables.bpSmall
+                        ){
+                            return;
+                        }
+            
+                        /*
+                                            $(this.selectors.productImagePhoto, this.$container).magnificPopup({
+                                                type: 'image',
+                                                mainClass: 'mfp-fade',
+                                                closeOnBgClick: true,
+                                                closeBtnInside: false,
+                                                closeOnContentClick: true,
+                                                tClose: theme.strings.zoomClose,
+                                                removalDelay: 500,
+                                                gallery: {
+                                                    enabled: true,
+                                                    navigateByImgClick: false,
+                                                    arrowMarkup:
+                                                        '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"><span class="mfp-chevron mfp-chevron-%dir%"></span></button>',
+                                                    tPrev: theme.strings.zoomPrev,
+                                                    tNext: theme.strings.zoomNext
+                                                }
+                                            });
+                        */
+                    },
+        
+                    createImageCarousel: function() {
+                        var self = this;
+            
+                        if (
+                            !$(this.selectors.productImages, this.$container).length ||
+                            $(this.selectors.productImagePhoto, this.$container).length < 2
+                        ){
+                            return;
+                        }
+            
+                        $(this.selectors.productImages, this.$container).slick({
+                            arrows: false,
+                            dots: true,
+                            adaptiveHeight: true,
+                            onAfterChange: function() {
+                                // Let's do this after changing slides
+                                // Update featured image and active thumbnail on desktop
+                                // when changing slides
+                                self.setFeaturedImage();
+                            }
+                        });
+                    },
+        
+                    setFeaturedImage: function() {
+                        // Thumbnail layout only
+                        if (this.$container.data('scroll-to-image')) return;
+                        var imageId = $(this.selectors.productImages, this.$container)
+                        .find('.slick-slide.slick-active .product-single__photo')
+                        .attr('data-image-id');
+            
+                        this.switchImage(imageId);
+                        this.setActiveThumbnail(imageId);
+                    },
+        
+                    destroyImageCarousel: function() {
+                        if (!$(this.selectors.productImages, this.$container).length){
+                            return;
+                        }
+                        $(this.selectors.productImages, this.$container).unslick();
+                    },
+        
+                    productPage: function(evt) {
+                        var moneyFormat = strings.moneyFormat;
+                        var variant = evt.variant;
+                        var translations = strings;
+            
+                        if (variant){
+                            // Display variant image on featured product
+                            if (!$('body').hasClass('template-product')){
+                                if (variant.featured_image){
+                                    var $newImage = $(
+                                        this.selectors.productImageWrapper +
+                                        '[data-image-id="' +
+                                        variant.featured_image.id +
+                                        '"]',
+                                        this.$container
+                                    );
+                                    var $otherImages = $(
+                                        this.selectors.productImageWrapper +
+                                        ':not([data-image-id="' +
+                                        variant.featured_image.id +
+                                        '"])',
+                                        this.$container
+                                    );
+                        
+                                    $newImage.removeClass('hide');
+                                    $otherImages.addClass('hide');
+                                }
+                            }
+                
+                            $(this.selectors.priceContainer, this.$container).removeClass(
+                                'visibility-hidden'
+                            );
+                            $(this.selectors.productPrice, this.$container).attr(
+                                'aria-hidden',
+                                'false'
+                            );
+                            $(this.selectors.priceA11y, this.$container).attr(
+                                'aria-hidden',
+                                'false'
+                            );
+                
+                            // Select a valid variant if available
+                            if (variant.available){
+                                // Available, enable the submit button, change text, show quantity elements
+                                $(this.selectors.addToCart, this.$container)
+                                .removeClass('disabled')
+                                .prop('disabled', false);
+                                $(this.selectors.addToCartText, this.$container).html(
+                                    translations.addToCart
+                                );
+                                $(this.selectors.quantityElements, this.$container).show();
+                                $(this.selectors.shopifyPaymentButton, this.$container).show();
+                    
+                                // Update the full details link
+                                var $link = $(this.selectors.productFullDetails, this.$container);
+                                if ($link.length){
+                                    $link.attr(
+                                        'href',
+                                        this.updateUrlParameter($link.attr('href'), 'variant', variant.id)
+                                    );
+                                }
+                            } else {
+                                // Sold out, disable the submit button, change text, hide quantity elements
+                                $(this.selectors.addToCart, this.$container)
+                                .addClass('disabled')
+                                .prop('disabled', true);
+                                $(this.selectors.addToCartText, this.$container).html(
+                                    translations.soldOut
+                                );
+                                $(this.selectors.quantityElements, this.$container).hide();
+                                $(this.selectors.shopifyPaymentButton, this.$container).hide();
+                            }
+                
+                            $(this.selectors.productPrice, this.$container)
+                            .html(theme.Currency.formatMoney(variant.price, moneyFormat))
+                            .show();
+                
+                            // Also update and show the product's compare price if necessary
+                            if (variant.compare_at_price > variant.price){
+                                $(this.selectors.comparePrice, this.$container).html(
+                                    theme.Currency.formatMoney(variant.compare_at_price, moneyFormat)
+                                );
+                                $(this.selectors.comparePriceWrapper, this.$container).removeClass(
+                                    'hide'
+                                );
+                                $(this.selectors.productPrice, this.$container).addClass('on-sale');
+                                $(this.selectors.comparePriceWrapper, this.$container).attr(
+                                    'aria-hidden',
+                                    'false'
+                                );
+                                $(this.selectors.comparePriceA11y, this.$container).attr(
+                                    'aria-hidden',
+                                    'false'
+                                );
+                            } else {
+                                $(this.selectors.comparePriceWrapper, this.$container)
+                                .addClass('hide')
+                                .attr('aria-hidden', 'true');
+                                $(this.selectors.productPrice, this.$container).removeClass(
+                                    'on-sale'
+                                );
+                                $(this.selectors.comparePrice, this.$container).html('');
+                                $(this.selectors.comparePriceA11y, this.$container).attr(
+                                    'aria-hidden',
+                                    'true'
+                                );
+                            }
+                
+                            // Also Show SKU
+                            $(this.selectors.SKU).html(variant.sku);
+                        } else {
+                            // The variant doesn't exist, disable submit button.
+                            // This may be an error or notice that a specific variant is not available.
+                            // To only show available variants, implement linked product options:
+                            //   - http://docs.shopify.com/manual/configuration/store-customization/advanced-navigation/linked-product-options
+                            $(this.selectors.addToCart, this.$container)
+                            .addClass('disabled')
+                            .prop('disabled', true);
+                            $(this.selectors.addToCartText, this.$container).html(
+                                translations.unavailable
+                            );
+                            $(this.selectors.quantityElements, this.$container).hide();
+                            $(this.selectors.shopifyPaymentButton, this.$container).hide();
+                
+                            $(this.selectors.priceContainer, this.$container).addClass(
+                                'visibility-hidden'
+                            );
+                            $(this.selectors.productPrice, this.$container).attr(
+                                'aria-hidden',
+                                'true'
+                            );
+                            $(this.selectors.priceA11y, this.$container).attr(
+                                'aria-hidden',
+                                'true'
+                            );
+                            $(this.selectors.comparePriceWrapper, this.$container).attr(
+                                'aria-hidden',
+                                'true'
+                            );
+                            $(this.selectors.comparePriceA11y, this.$container).attr(
+                                'aria-hidden',
+                                'true'
+                            );
+                        }
+                    },
+        
+                    updateUrlParameter: function(url, key, value) {
+                        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+                        var separator = url.indexOf('?') === -1 ? '?' : '&';
+            
+                        if (url.match(re)){
+                            return url.replace(re, '$1' + key + '=' + value + '$2');
+                        } else {
+                            return url + separator + key + '=' + value;
+                        }
+                    },
+        
+                    initStickyProductMeta: function() {
+                        var $meta = $(this.selectors.meta, this.$container);
+                        var $wrapper = $(this.selectors.productWrapper, this.$container);
+            
+                        if ($meta.find('#shopify-product-reviews').length){
+                            theme.variables.productPageSticky = false;
+                            return;
+                        }
+            
+                        if (
+                            !$meta.length ||
+                            $(this.selectors.productImagePhoto, this.$container).length < 2
+                        ){
+                            return;
+                        }
+            
+                        // Force detatch if already detached. Prevent layout issues.
+                        $meta.trigger('detach.ScrollToFixed');
+            
+                        // Detach and stop if on mobile breakpoint
+                        if (theme.variables.bpSmall){
+                            return;
+                        }
+            
+                        var productCopyHeight = $meta.outerHeight();
+                        var productImagesHeight = $(
+                            this.selectors.productImages,
+                            this.$container
+                        ).height();
+            
+                        /*============================================================================
+                          Calculate when to detach fixed element to avoid content overlap.
+                          Subtract product copy height from the limit because plugin uses offset().top
+                        ==============================================================================*/
+                        var calcLimit = $wrapper.offset().top + $wrapper.height();
+                        calcLimit -= productCopyHeight;
+            
+                        // Init sticky if desc shorter than images and fits in viewport
+                        if (
+                            productCopyHeight < productImagesHeight &&
+                            productCopyHeight < $(window).height()
+                        ){
+                            theme.variables.productPageSticky = true;
+                            $meta.scrollToFixed({
+                                limit: calcLimit
+                            });
+                        } else {
+                            theme.variables.productPageSticky = false;
+                        }
+                    },
+        
+                    onUnload: function() {
+                        this.$container.off(this.settings.namespace);
+                        this.destroyImageCarousel();
+                    }
+                });
+
+    
                 this.settings = {
                     productPageLoad: false,
                     preloadImage: false,
@@ -74,7 +587,7 @@ export const theme = (function() {
                     document.getElementById('ProductJson-' + sectionId).innerHTML
                 );
                 this.zoomType = $container.data('image-zoom-type');
-                
+    
                 this.initBreakpoints();
                 this.stringOverrides();
                 this.initProductVariant();
@@ -91,7 +604,7 @@ export const theme = (function() {
                         cartContainer: '#CartContainer',
                         addToCartSelector: '#AddToCart--' + sectionId,
                         enableQtySelectors: true,
-                        moneyFormat: theme.strings.moneyFormat
+                        moneyFormat: strings.moneyFormat
                     });
                 }
                 
@@ -103,501 +616,6 @@ export const theme = (function() {
                 );
             }
             
-            Product.prototype = _.assignIn({}, Product.prototype, {
-                initProductVariant: function() {
-                    var options = {
-                        $container: this.$container,
-                        enableHistoryState:
-                        this.$container.data('enable-history-state') || false,
-                        singleOptionSelector: this.selectors.singleOptionSelector,
-                        originalSelectorId: this.selectors.originalSelectorId,
-                        product: this.productSingleObject
-                    };
-                    
-                    this.variants = new slate.Variants(options);
-                    this.$container.on(
-                        'variantChange' + this.settings.namespace,
-                        this.productPage.bind(this)
-                    );
-                    this.$container.on(
-                        'variantImageChange' + this.settings.namespace,
-                        this.showVariantImage.bind(this)
-                    );
-                },
-                
-                initBreakpoints: function() {
-                    var self = this;
-                    var $container = self.$container;
-                    self.zoomType = $container.data('image-zoom-type');
-                    
-                    enquire.register(theme.variables.mediaQuerySmall, {
-                        match: function() {
-                            self.createImageCarousel();
-                            if (self.zoomType){
-                                if ($(self.selectors.productImagePhoto).length){
-                                    // remove event handlers for product zoom on mobile
-                                    $(self.selectors.productImagePhoto).off();
-                                }
-                            }
-                        },
-                        unmatch: function() {
-                            self.destroyImageCarousel();
-                            self.reorderImages();
-                            if (self.zoomType){
-                                // reinit product zoom
-                                self.productImageZoom();
-                            }
-                        }
-                    });
-                },
-                
-                stringOverrides: function() {
-                    // Override defaults in theme.strings with potential
-                    // template overrides
-                    
-                    theme.productStrings = theme.productStrings || {};
-                    $.extend(theme.strings, theme.productStrings);
-                },
-                
-                resizeElements: function() {
-                    $(
-                        this.selectors.productGridImages,
-                        this.$container
-                    ).imagesLoaded(function() {
-                        $(this.selectors.productGridImages, this.$container)
-                        .css('height', 'auto')
-                        .equalHeights();
-                    });
-                },
-                
-                showVariantImage: function(evt) {
-                    var variant = evt.variant;
-                    var $newImage = $(
-                        '.product-single__photo[data-image-id="' +
-                        variant.featured_image.id +
-                        '"]'
-                    );
-                    var imageIndex;
-                    
-                    if (variant && variant.featured_image){
-                        this.setActiveThumbnail(variant.featured_image.id);
-                    }
-                    
-                    if (theme.variables.bpSmall){
-                        // Switch carousel slide, unless it's the first photo on load
-                        imageIndex = $newImage.closest('.slick-slide').attr('index');
-                        // Navigate to slide unless it's the first photo on load
-                        // If there is no index, slider is not initalized.
-                        if (_.isUndefined(imageIndex)){
-                            return;
-                        }
-                        
-                        if (imageIndex !== 0 || theme.variables.productPageLoad){
-                            $(this.selectors.productImages, this.$container).slickGoTo(
-                                imageIndex
-                            );
-                        }
-                        // Switch image variant on thumbnail layout for desktop view;
-                        // When a image variant is updated on mobile view, update the
-                        // desktop view also.
-                        if (!this.$container.data('scroll-to-image')){
-                            this.switchImage(variant.featured_image.id);
-                        }
-                    } else {
-                        if (this.$container.data('scroll-to-image')){
-                            imageIndex = $newImage.closest('.slick-slide').index();
-                            // Scroll to/reorder image unless it's the first photo on load
-                            if (imageIndex !== 0 || theme.variables.productPageLoad){
-                                if (theme.variables.productPageSticky){
-                                    // Scroll to variant image
-                                    $('html, body').animate(
-                                        {
-                                            scrollTop: $newImage.offset().top
-                                        },
-                                        250
-                                    );
-                                } else {
-                                    // Move selected variant image to top, preventing scrolling
-                                    var currentScroll = $(document).scrollTop();
-                                    $newImage
-                                    .closest(
-                                        $(
-                                            this.selectors.productImagePhotoFlexWrapper,
-                                            this.$container
-                                        )
-                                    )
-                                    .prependTo($(this.selectors.productImages, this.$container));
-                                    $(document).scrollTop(currentScroll);
-                                }
-                            }
-                        } else {
-                            // Thumbnail layout
-                            // Move selected variant image to top
-                            $newImage
-                            .closest(
-                                $(this.selectors.productImagePhotoFlexWrapper, this.$container)
-                            )
-                            .prependTo($(this.selectors.productImages, this.$container));
-                            // Switch image variant for thumnail layout
-                            this.switchImage(variant.featured_image.id);
-                        }
-                    }
-                    
-                    if (!theme.variables.productPageLoad){
-                        theme.variables.productPageLoad = true;
-                    }
-                },
-                
-                switchImage: function(imageId) {
-                    $(this.selectors.productImagePhotoContainer, this.$container).addClass(
-                        'hide'
-                    );
-                    $(this.selectors.productImagePhotoContainer, this.$container)
-                    .filter('#ProductImageWrapper-' + imageId)
-                    .removeClass('hide');
-                },
-                
-                reorderImages: function() {
-                    if (this.$container.data('scroll-to-image')) return;
-                    var $newImage = $(
-                        this.selectors.productImagePhotoContainer,
-                        this.$container
-                    ).not('.hide');
-                    $newImage
-                    .closest(
-                        $(this.selectors.productImagePhotoFlexWrapper, this.$container)
-                    )
-                    .prependTo($(this.selectors.productImages, this.$container));
-                },
-                
-                productThumbnailSwitch: function() {
-                    var self = this;
-                    var $productThumbnails = $('#ProductThumbs', this.$container).find(
-                        this.selectors.productThumbnail
-                    );
-                    
-                    if ($productThumbnails.length){
-                        // Switch the main image with one of the thumbnails
-                        // Note: this does not change the variant selected, just the image
-                        $productThumbnails.on('click', function(evt) {
-                            evt.preventDefault();
-                            var newImageId = $(this).attr('data-image-id');
-                            var $newImage = $(
-                                '.product-single__photo[data-image-id="' + newImageId + '"]'
-                            );
-                            
-                            self.switchImage(newImageId);
-                            self.setActiveThumbnail(newImageId);
-                            
-                            // Thumbnail layout
-                            // Move selected featured image to top
-                            $newImage
-                            .closest(
-                                $(self.selectors.productImagePhotoFlexWrapper, self.$container)
-                            )
-                            .prependTo($(self.selectors.productImages, self.$container));
-                        });
-                    }
-                },
-                
-                setActiveThumbnail: function(imageId) {
-                    var $productThumbnails = $('#ProductThumbs', this.$container).find(
-                        this.selectors.productThumbnail
-                    );
-                    
-                    if ($productThumbnails.length){
-                        var activeClass = 'active-thumb';
-                        var $thumbnail = $(
-                            this.selectors.productThumbnail + "[data-image-id='" + imageId + "']",
-                            this.$container
-                        );
-                        
-                        $productThumbnails.removeClass(activeClass);
-                        $thumbnail.addClass(activeClass);
-                    }
-                },
-                
-                productImageZoom: function() {
-                    if (
-                        !$(this.selectors.productImagePhoto, this.$container).length ||
-                        theme.variables.bpSmall
-                    ){
-                        return;
-                    }
-                    
-                    $(this.selectors.productImagePhoto, this.$container).magnificPopup({
-                        type: 'image',
-                        mainClass: 'mfp-fade',
-                        closeOnBgClick: true,
-                        closeBtnInside: false,
-                        closeOnContentClick: true,
-                        tClose: theme.strings.zoomClose,
-                        removalDelay: 500,
-                        gallery: {
-                            enabled: true,
-                            navigateByImgClick: false,
-                            arrowMarkup:
-                                '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"><span class="mfp-chevron mfp-chevron-%dir%"></span></button>',
-                            tPrev: theme.strings.zoomPrev,
-                            tNext: theme.strings.zoomNext
-                        }
-                    });
-                },
-                
-                createImageCarousel: function() {
-                    var self = this;
-                    
-                    if (
-                        !$(this.selectors.productImages, this.$container).length ||
-                        $(this.selectors.productImagePhoto, this.$container).length < 2
-                    ){
-                        return;
-                    }
-                    
-                    $(this.selectors.productImages, this.$container).slick({
-                        arrows: false,
-                        dots: true,
-                        adaptiveHeight: true,
-                        onAfterChange: function() {
-                            // Let's do this after changing slides
-                            // Update featured image and active thumbnail on desktop
-                            // when changing slides
-                            self.setFeaturedImage();
-                        }
-                    });
-                },
-                
-                setFeaturedImage: function() {
-                    // Thumbnail layout only
-                    if (this.$container.data('scroll-to-image')) return;
-                    var imageId = $(this.selectors.productImages, this.$container)
-                    .find('.slick-slide.slick-active .product-single__photo')
-                    .attr('data-image-id');
-                    
-                    this.switchImage(imageId);
-                    this.setActiveThumbnail(imageId);
-                },
-                
-                destroyImageCarousel: function() {
-                    if (!$(this.selectors.productImages, this.$container).length){
-                        return;
-                    }
-                    $(this.selectors.productImages, this.$container).unslick();
-                },
-                
-                productPage: function(evt) {
-                    var moneyFormat = theme.strings.moneyFormat;
-                    var variant = evt.variant;
-                    var translations = theme.strings;
-                    
-                    if (variant){
-                        // Display variant image on featured product
-                        if (!$('body').hasClass('template-product')){
-                            if (variant.featured_image){
-                                var $newImage = $(
-                                    this.selectors.productImageWrapper +
-                                    '[data-image-id="' +
-                                    variant.featured_image.id +
-                                    '"]',
-                                    this.$container
-                                );
-                                var $otherImages = $(
-                                    this.selectors.productImageWrapper +
-                                    ':not([data-image-id="' +
-                                    variant.featured_image.id +
-                                    '"])',
-                                    this.$container
-                                );
-                                
-                                $newImage.removeClass('hide');
-                                $otherImages.addClass('hide');
-                            }
-                        }
-                        
-                        $(this.selectors.priceContainer, this.$container).removeClass(
-                            'visibility-hidden'
-                        );
-                        $(this.selectors.productPrice, this.$container).attr(
-                            'aria-hidden',
-                            'false'
-                        );
-                        $(this.selectors.priceA11y, this.$container).attr(
-                            'aria-hidden',
-                            'false'
-                        );
-                        
-                        // Select a valid variant if available
-                        if (variant.available){
-                            // Available, enable the submit button, change text, show quantity elements
-                            $(this.selectors.addToCart, this.$container)
-                            .removeClass('disabled')
-                            .prop('disabled', false);
-                            $(this.selectors.addToCartText, this.$container).html(
-                                translations.addToCart
-                            );
-                            $(this.selectors.quantityElements, this.$container).show();
-                            $(this.selectors.shopifyPaymentButton, this.$container).show();
-                            
-                            // Update the full details link
-                            var $link = $(this.selectors.productFullDetails, this.$container);
-                            if ($link.length){
-                                $link.attr(
-                                    'href',
-                                    this.updateUrlParameter($link.attr('href'), 'variant', variant.id)
-                                );
-                            }
-                        } else {
-                            // Sold out, disable the submit button, change text, hide quantity elements
-                            $(this.selectors.addToCart, this.$container)
-                            .addClass('disabled')
-                            .prop('disabled', true);
-                            $(this.selectors.addToCartText, this.$container).html(
-                                translations.soldOut
-                            );
-                            $(this.selectors.quantityElements, this.$container).hide();
-                            $(this.selectors.shopifyPaymentButton, this.$container).hide();
-                        }
-                        
-                        $(this.selectors.productPrice, this.$container)
-                        .html(theme.Currency.formatMoney(variant.price, moneyFormat))
-                        .show();
-                        
-                        // Also update and show the product's compare price if necessary
-                        if (variant.compare_at_price > variant.price){
-                            $(this.selectors.comparePrice, this.$container).html(
-                                theme.Currency.formatMoney(variant.compare_at_price, moneyFormat)
-                            );
-                            $(this.selectors.comparePriceWrapper, this.$container).removeClass(
-                                'hide'
-                            );
-                            $(this.selectors.productPrice, this.$container).addClass('on-sale');
-                            $(this.selectors.comparePriceWrapper, this.$container).attr(
-                                'aria-hidden',
-                                'false'
-                            );
-                            $(this.selectors.comparePriceA11y, this.$container).attr(
-                                'aria-hidden',
-                                'false'
-                            );
-                        } else {
-                            $(this.selectors.comparePriceWrapper, this.$container)
-                            .addClass('hide')
-                            .attr('aria-hidden', 'true');
-                            $(this.selectors.productPrice, this.$container).removeClass(
-                                'on-sale'
-                            );
-                            $(this.selectors.comparePrice, this.$container).html('');
-                            $(this.selectors.comparePriceA11y, this.$container).attr(
-                                'aria-hidden',
-                                'true'
-                            );
-                        }
-                        
-                        // Also Show SKU
-                        $(this.selectors.SKU).html(variant.sku);
-                    } else {
-                        // The variant doesn't exist, disable submit button.
-                        // This may be an error or notice that a specific variant is not available.
-                        // To only show available variants, implement linked product options:
-                        //   - http://docs.shopify.com/manual/configuration/store-customization/advanced-navigation/linked-product-options
-                        $(this.selectors.addToCart, this.$container)
-                        .addClass('disabled')
-                        .prop('disabled', true);
-                        $(this.selectors.addToCartText, this.$container).html(
-                            translations.unavailable
-                        );
-                        $(this.selectors.quantityElements, this.$container).hide();
-                        $(this.selectors.shopifyPaymentButton, this.$container).hide();
-                        
-                        $(this.selectors.priceContainer, this.$container).addClass(
-                            'visibility-hidden'
-                        );
-                        $(this.selectors.productPrice, this.$container).attr(
-                            'aria-hidden',
-                            'true'
-                        );
-                        $(this.selectors.priceA11y, this.$container).attr(
-                            'aria-hidden',
-                            'true'
-                        );
-                        $(this.selectors.comparePriceWrapper, this.$container).attr(
-                            'aria-hidden',
-                            'true'
-                        );
-                        $(this.selectors.comparePriceA11y, this.$container).attr(
-                            'aria-hidden',
-                            'true'
-                        );
-                    }
-                },
-                
-                updateUrlParameter: function(url, key, value) {
-                    var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
-                    var separator = url.indexOf('?') === -1 ? '?' : '&';
-                    
-                    if (url.match(re)){
-                        return url.replace(re, '$1' + key + '=' + value + '$2');
-                    } else {
-                        return url + separator + key + '=' + value;
-                    }
-                },
-                
-                initStickyProductMeta: function() {
-                    var $meta = $(this.selectors.meta, this.$container);
-                    var $wrapper = $(this.selectors.productWrapper, this.$container);
-                    
-                    if ($meta.find('#shopify-product-reviews').length){
-                        theme.variables.productPageSticky = false;
-                        return;
-                    }
-                    
-                    if (
-                        !$meta.length ||
-                        $(this.selectors.productImagePhoto, this.$container).length < 2
-                    ){
-                        return;
-                    }
-                    
-                    // Force detatch if already detached. Prevent layout issues.
-                    $meta.trigger('detach.ScrollToFixed');
-                    
-                    // Detach and stop if on mobile breakpoint
-                    if (theme.variables.bpSmall){
-                        return;
-                    }
-                    
-                    var productCopyHeight = $meta.outerHeight();
-                    var productImagesHeight = $(
-                        this.selectors.productImages,
-                        this.$container
-                    ).height();
-                    
-                    /*============================================================================
-                      Calculate when to detach fixed element to avoid content overlap.
-                      Subtract product copy height from the limit because plugin uses offset().top
-                    ==============================================================================*/
-                    var calcLimit = $wrapper.offset().top + $wrapper.height();
-                    calcLimit -= productCopyHeight;
-                    
-                    // Init sticky if desc shorter than images and fits in viewport
-                    if (
-                        productCopyHeight < productImagesHeight &&
-                        productCopyHeight < $(window).height()
-                    ){
-                        theme.variables.productPageSticky = true;
-                        $meta.scrollToFixed({
-                            limit: calcLimit
-                        });
-                    } else {
-                        theme.variables.productPageSticky = false;
-                    }
-                },
-                
-                onUnload: function() {
-                    this.$container.off(this.settings.namespace);
-                    this.destroyImageCarousel();
-                }
-            });
             
             return Product;
         })(),
@@ -611,6 +629,63 @@ export const theme = (function() {
                 theme.searchModal();
                 
                 var $container = (this.$container = $(container));
+    
+                this.prototype = _.assignIn({}, this.prototype, {
+                    onSelect: function() {
+                        this.handleDrawerOpenInEditor(event);
+                    },
+        
+                    onDeselect: function() {
+                        timber.LeftDrawer.close(event);
+                    },
+        
+                    handleDrawerOpenInEditor: function(event) {
+                        if (
+                            theme.cache.$siteNav.hasClass('site-nav--compress') ||
+                            theme.variables.bpSmall
+                        ){
+                            setTimeout(function() {
+                                timber.LeftDrawer.drawerIsOpen = false;
+                                timber.LeftDrawer.open();
+                            }, 500);
+                        } else if (!theme.cache.$siteNav.hasClass('site-nav--compress')){
+                            timber.LeftDrawer.drawerIsOpen = true;
+                            timber.LeftDrawer.close(event);
+                        }
+                    },
+        
+                    initSideBarDropDowns: function() {
+                        var $toggleBtns = $('.mobile-nav__toggle-btn');
+                        // Setup aria attributes
+                        $toggleBtns.attr('aria-expanded', 'false');
+            
+                        $toggleBtns.each(function() {
+                            var $button = $(this);
+                            $button.attr('aria-controls', $button.attr('data-aria-controls'));
+                        });
+            
+                        $toggleBtns.on('click', function() {
+                            var $button = $(this);
+                            var currentlyExpanded = $button.attr('aria-expanded');
+                            var toggleState = false;
+                            // Updated aria-expanded value based on state pre-click
+                            if (currentlyExpanded === 'true'){
+                                $button.attr('aria-expanded', 'false');
+                            } else {
+                                $button.attr('aria-expanded', 'true');
+                                toggleState = true;
+                            }
+                
+                            // Toggle that expands/collapses sublist
+                            $button
+                            .closest('.mobile-nav__has-sublist')
+                            .toggleClass('mobile-nav--expanded', toggleState)
+                            .next()
+                            .slideToggle();
+                        });
+                    }
+                });
+    
                 this.template = $container.attr('data-template');
                 
                 // ajaxCart.init will run from Product.prototype when on the product page
@@ -623,7 +698,7 @@ export const theme = (function() {
                         cartContainer: '#CartContainer',
                         addToCartSelector: '.add-to-cart',
                         enableQtySelectors: true,
-                        moneyFormat: theme.strings.moneyFormat
+                        moneyFormat: strings.moneyFormat
                     });
                 }
                 
@@ -640,61 +715,6 @@ export const theme = (function() {
                 this.initSideBarDropDowns();
             }
             
-            Header.prototype = _.assignIn({}, Header.prototype, {
-                onSelect: function() {
-                    this.handleDrawerOpenInEditor(event);
-                },
-                
-                onDeselect: function() {
-                    timber.LeftDrawer.close(event);
-                },
-                
-                handleDrawerOpenInEditor: function(event) {
-                    if (
-                        theme.cache.$siteNav.hasClass('site-nav--compress') ||
-                        theme.variables.bpSmall
-                    ){
-                        setTimeout(function() {
-                            timber.LeftDrawer.drawerIsOpen = false;
-                            timber.LeftDrawer.open();
-                        }, 500);
-                    } else if (!theme.cache.$siteNav.hasClass('site-nav--compress')){
-                        timber.LeftDrawer.drawerIsOpen = true;
-                        timber.LeftDrawer.close(event);
-                    }
-                },
-                
-                initSideBarDropDowns: function() {
-                    var $toggleBtns = $('.mobile-nav__toggle-btn');
-                    // Setup aria attributes
-                    $toggleBtns.attr('aria-expanded', 'false');
-                    
-                    $toggleBtns.each(function() {
-                        var $button = $(this);
-                        $button.attr('aria-controls', $button.attr('data-aria-controls'));
-                    });
-                    
-                    $toggleBtns.on('click', function() {
-                        var $button = $(this);
-                        var currentlyExpanded = $button.attr('aria-expanded');
-                        var toggleState = false;
-                        // Updated aria-expanded value based on state pre-click
-                        if (currentlyExpanded === 'true'){
-                            $button.attr('aria-expanded', 'false');
-                        } else {
-                            $button.attr('aria-expanded', 'true');
-                            toggleState = true;
-                        }
-                        
-                        // Toggle that expands/collapses sublist
-                        $button
-                        .closest('.mobile-nav__has-sublist')
-                        .toggleClass('mobile-nav--expanded', toggleState)
-                        .next()
-                        .slideToggle();
-                    });
-                }
-            });
             
             return Header;
         })(),
@@ -755,7 +775,161 @@ export const theme = (function() {
                 
                 var $container = (this.$container = $(container));
                 this.gridType = $container.data('grid-type');
+    
+                this.prototype = _.assignIn({}, this.prototype, {
+                    init: function() {
+                        this.cacheSelectors();
+                        this.setQueryParams();
+            
+                        this.cache.$sortDropdown.on('change', this.sortCollection.bind(this));
+            
+                        if (this.gridType === 'collage'){
+                            this.initCollageGrid();
+                        } else if (this.gridType === 'grid'){
+                            theme.equalHeights.call(this);
+                        }
+                    },
+        
+                    updateFilterLabel: function(evt, element) {
+                        var $select = evt ? $(evt.target) : $(element);
+                        var $label = $select
+                        .prev('.filter-dropdown__label')
+                        .find('.filter-dropdown__label--active');
+                        var selectedVariant = $select.find('option:selected').text();
+            
+                        $label.html(' ' + selectedVariant);
+                        this.cache.$filterDropdowns.addClass('loaded');
+                    },
+        
+                    cacheSelectors: function() {
+                        this.cache = {
+                            $html: $('html'),
+                            $window: $(window),
+                            $productGridImages: $(this.selectors.productGridImages),
+                            $productGridRows: $(this.selectors.productGridRows),
+                            $productGridPhotosLarge: $(this.selectors.productGridPhotosLarge),
+                            $filterDropdowns: $(this.selectors.filterDropdowns),
+                            $filterSelect: $(this.selectors.filterSelect),
+                            $filterLabel: $(this.selectors.filterLabel),
+                            $sortDropdown: $(this.selectors.sortDropdown)
+                        };
+                    },
+        
+                    setQueryParams: function() {
+                        //don't execute if sort dropdown is not present.
+                        if (!this.cache.$sortDropdown.length){
+                            return;
+                        }
+            
+                        Shopify.queryParams = this.parseQueryString();
+                    },
+        
+                    parseQueryString: function() {
+                        if (!location.search.length){
+                            return {};
+                        }
+            
+                        var params = {};
+            
+                        for (
+                            var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&');
+                            i < aCouples.length;
+                            i++
+                        ) {
+                            aKeyValue = aCouples[i].split('=');
+                            if (aKeyValue.length > 1){
+                                params[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(
+                                    aKeyValue[1]
+                                );
+                            }
+                        }
+                        return params;
+                    },
+        
+                    initCollageGrid: function() {
+                        if (!this.cache.$productGridRows.length){
+                            return;
+                        }
+            
+                        this.collageGridHeights();
+            
+                        theme.cache.$window.on(
+                            'resize',
+                            theme.debounce(this.collageGridHeights, 500)
+                        );
+                    },
+        
+                    collageGridHeights: function() {
+                        if (theme.variables.bpSmall || !this.cache.$productGridRows.length){
+                            return;
+                        }
+            
+                        // calculate image heights for each row of grid images
+                        for (var i = this.cache.$productGridRows.length - 1; i >= 0; i--) {
+                            var $currentRow = $(this.cache.$productGridRows[i]);
+                            var $smallImages = $currentRow.find(
+                                '.grid__item--small .grid-product__image-wrapper'
+                            );
+                            var $largeImageWrapper = $currentRow.find(
+                                '.grid__item--large .grid-product__image-wrapper'
+                            );
+                            var $largeImage = $largeImageWrapper.find('.grid-product__image-link');
                 
+                            // calculate the bottom edge of the small image
+                            var smallImageOffset =
+                                $smallImages[1].offsetTop + $smallImages[1].offsetHeight;
+                
+                            // calculate the bottom edge of the large image for the row
+                            var largeImageOffset =
+                                $largeImageWrapper[0].offsetTop + $largeImageWrapper[0].offsetHeight;
+                
+                            var largeImageHeight = 0;
+                
+                            // Depending on which image is lower, increase or decrease the large
+                            // image size
+                            if (smallImageOffset > largeImageOffset){
+                                largeImageHeight =
+                                    $largeImage.height() + (smallImageOffset - largeImageOffset);
+                            } else {
+                                largeImageHeight =
+                                    $largeImage.height() - (largeImageOffset - smallImageOffset);
+                            }
+                
+                            $largeImage.css('height', largeImageHeight);
+                        }
+                    },
+        
+                    clearCollageGridHeights: function() {
+                        if (!this.cache.$productGridRows.length){
+                            return;
+                        }
+            
+                        this.cache.$productGridPhotosLarge.removeAttr('style');
+                    },
+        
+                    collectionSorting: function() {
+                        if (!this.cache.$tagList.length){
+                            return;
+                        }
+            
+                        this.cache.$tagList.on('change', function() {
+                            window.location.href = $(this).val();
+                        });
+                    },
+        
+                    sortCollection: function() {
+                        if (!this.cache.$sortDropdown.length){
+                            return;
+                        }
+            
+                        if (Shopify.queryParams.page){
+                            delete Shopify.queryParams.page;
+                        }
+                        Shopify.queryParams.sort_by = this.cache.$sortDropdown.val();
+                        location.search = jQuery.param(Shopify.queryParams);
+                    }
+                });
+    
                 this.selectors.$collectionImage.addClass('is-init');
                 
                 // Enable parallax effect if 3d transforms are supported
@@ -773,159 +947,6 @@ export const theme = (function() {
                 this.init();
             }
             
-            Collection.prototype = _.assignIn({}, Collection.prototype, {
-                init: function() {
-                    this.cacheSelectors();
-                    this.setQueryParams();
-                    
-                    this.cache.$sortDropdown.on('change', this.sortCollection.bind(this));
-                    
-                    if (this.gridType === 'collage'){
-                        this.initCollageGrid();
-                    } else if (this.gridType === 'grid'){
-                        theme.equalHeights.call(this);
-                    }
-                },
-                
-                updateFilterLabel: function(evt, element) {
-                    var $select = evt ? $(evt.target) : $(element);
-                    var $label = $select
-                    .prev('.filter-dropdown__label')
-                    .find('.filter-dropdown__label--active');
-                    var selectedVariant = $select.find('option:selected').text();
-                    
-                    $label.html(' ' + selectedVariant);
-                    this.cache.$filterDropdowns.addClass('loaded');
-                },
-                
-                cacheSelectors: function() {
-                    this.cache = {
-                        $html: $('html'),
-                        $window: $(window),
-                        $productGridImages: $(this.selectors.productGridImages),
-                        $productGridRows: $(this.selectors.productGridRows),
-                        $productGridPhotosLarge: $(this.selectors.productGridPhotosLarge),
-                        $filterDropdowns: $(this.selectors.filterDropdowns),
-                        $filterSelect: $(this.selectors.filterSelect),
-                        $filterLabel: $(this.selectors.filterLabel),
-                        $sortDropdown: $(this.selectors.sortDropdown)
-                    };
-                },
-                
-                setQueryParams: function() {
-                    //don't execute if sort dropdown is not present.
-                    if (!this.cache.$sortDropdown.length){
-                        return;
-                    }
-                    
-                    Shopify.queryParams = this.parseQueryString();
-                },
-                
-                parseQueryString: function() {
-                    if (!location.search.length){
-                        return {};
-                    }
-                    
-                    var params = {};
-                    
-                    for (
-                        var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&');
-                        i < aCouples.length;
-                        i++
-                    ) {
-                        aKeyValue = aCouples[i].split('=');
-                        if (aKeyValue.length > 1){
-                            params[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(
-                                aKeyValue[1]
-                            );
-                        }
-                    }
-                    return params;
-                },
-                
-                initCollageGrid: function() {
-                    if (!this.cache.$productGridRows.length){
-                        return;
-                    }
-                    
-                    this.collageGridHeights();
-                    
-                    theme.cache.$window.on(
-                        'resize',
-                        theme.debounce(this.collageGridHeights, 500)
-                    );
-                },
-                
-                collageGridHeights: function() {
-                    if (theme.variables.bpSmall || !this.cache.$productGridRows.length){
-                        return;
-                    }
-                    
-                    // calculate image heights for each row of grid images
-                    for (var i = this.cache.$productGridRows.length - 1; i >= 0; i--) {
-                        var $currentRow = $(this.cache.$productGridRows[i]);
-                        var $smallImages = $currentRow.find(
-                            '.grid__item--small .grid-product__image-wrapper'
-                        );
-                        var $largeImageWrapper = $currentRow.find(
-                            '.grid__item--large .grid-product__image-wrapper'
-                        );
-                        var $largeImage = $largeImageWrapper.find('.grid-product__image-link');
-                        
-                        // calculate the bottom edge of the small image
-                        var smallImageOffset =
-                            $smallImages[1].offsetTop + $smallImages[1].offsetHeight;
-                        
-                        // calculate the bottom edge of the large image for the row
-                        var largeImageOffset =
-                            $largeImageWrapper[0].offsetTop + $largeImageWrapper[0].offsetHeight;
-                        
-                        var largeImageHeight = 0;
-                        
-                        // Depending on which image is lower, increase or decrease the large
-                        // image size
-                        if (smallImageOffset > largeImageOffset){
-                            largeImageHeight =
-                                $largeImage.height() + (smallImageOffset - largeImageOffset);
-                        } else {
-                            largeImageHeight =
-                                $largeImage.height() - (largeImageOffset - smallImageOffset);
-                        }
-                        
-                        $largeImage.css('height', largeImageHeight);
-                    }
-                },
-                
-                clearCollageGridHeights: function() {
-                    if (!this.cache.$productGridRows.length){
-                        return;
-                    }
-                    
-                    this.cache.$productGridPhotosLarge.removeAttr('style');
-                },
-                
-                collectionSorting: function() {
-                    if (!this.cache.$tagList.length){
-                        return;
-                    }
-                    
-                    this.cache.$tagList.on('change', function() {
-                        window.location.href = $(this).val();
-                    });
-                },
-                
-                sortCollection: function() {
-                    if (!this.cache.$sortDropdown.length){
-                        return;
-                    }
-                    
-                    if (Shopify.queryParams.page){
-                        delete Shopify.queryParams.page;
-                    }
-                    Shopify.queryParams.sort_by = this.cache.$sortDropdown.val();
-                    location.search = jQuery.param(Shopify.queryParams);
-                }
-            });
             
             return Collection;
         })(),
@@ -934,7 +955,7 @@ export const theme = (function() {
                 this.init();
             }
             
-            PasswordHeader.prototype = _.assignIn({}, PasswordHeader.prototype, {
+            this.prototype = _.assignIn({}, this.prototype, {
                 init: function() {
                     $('.js-toggle-login-modal').magnificPopup({
                         type: 'inline',
@@ -982,10 +1003,10 @@ export const theme = (function() {
             var mapsToLoad = [];
             
             var errors = {
-                addressNoResults: theme.strings.addressNoResults,
-                addressQueryLimit: theme.strings.addressQueryLimit,
-                addressError: theme.strings.addressError,
-                authError: theme.strings.authError
+                addressNoResults: strings.addressNoResults,
+                addressQueryLimit: strings.addressQueryLimit,
+                addressError: strings.addressError,
+                authError: strings.authError
             };
             
             var selectors = {
@@ -1012,7 +1033,7 @@ export const theme = (function() {
                         '<div class="' +
                         classes.errorMsg +
                         '">' +
-                        theme.strings.authError +
+                        strings.authError +
                         '</div>'
                     );
                 }
@@ -1367,7 +1388,7 @@ export const theme = (function() {
                 closeOnBgClick: true,
                 closeBtnInside: false,
                 closeOnContentClick: false,
-                tClose: theme.strings.zoomClose,
+                tClose: strings.zoomClose,
                 alignTop: true,
                 removalDelay: 500
             });
@@ -1444,7 +1465,232 @@ export const theme = (function() {
             
             return "GILLIAN WAS HERE";
         }
+        
     }
 })();
 
+export const slickTheme = (function(module, $) {
+    'use strict';
+    
+    // Public functions
+    var init, onInit, beforeChange, afterChange;
+    
+    // Private variables
+    var settings,
+        $slider,
+        $allSlides,
+        $activeSlide,
+        windowHeight,
+        scrolled,
+        $heroText,
+        $heroImage;
+    var currentActiveSlide = 0;
+    
+    // Private functions
+    var cacheObjects,
+        checkFirstOnIndex,
+        setFullScreen,
+        sizeFullScreen,
+        setParallax,
+        calculateParallax;
+    /*============================================================================
+     Initialise the plugin and define global options
+    ==============================================================================*/
+    cacheObjects = function() {
+        slickTheme.cache = {
+            $html: $('html'),
+            $window: $(window),
+            $hero: $('#Hero'),
+            $heroImage: $('.hero__image'),
+            $headerWrapper: $('.header-wrapper')
+        };
+        
+        slickTheme.vars = {
+            slideClass: 'slick-slide',
+            activeClass: 'slick-active',
+            hiddenClass: 'hero__slide--hidden',
+            heroHeaderClass: 'hero__header'
+        };
+    };
+    
+    init = function(options) {
+        cacheObjects();
+        
+        // Default settings
+        settings = {
+            // User options
+            $element: null,
+            fullscreen: false,
+            parallax: false,
+            
+            // Private settings
+            isTouch: Modernizr.touch ? true : false,
+            
+            // Slick options
+            accessibility: true,
+            arrows: false,
+            dots: true,
+            focusOnChange: true,
+            adaptiveHeight: true
+        };
+        
+        // Override defaults with arguments
+        $.extend(settings, options);
+        
+        // Check if this hero is the first one on the home page
+        settings.isFirstOnIndex = checkFirstOnIndex();
+        
+        // Absolutely position header over hero as soon as possible
+        if (settings.isFirstOnIndex){
+            slickTheme.cache.$headerWrapper.addClass(slickTheme.vars.heroHeaderClass);
+        }
+        
+        /*
+         * Init slick slider
+         *   - Add any additional option changes here
+         *   - https://github.com/kenwheeler/slick/#options
+         */
+        settings.$element.slick({
+            accessibility: settings.accessibility,
+            arrows: settings.arrows,
+            dots: settings.dots,
+            adaptiveHeight: settings.fullscreen ? false : settings.adaptiveHeight,
+            draggable: false,
+            fade: true,
+            focusOnChange: settings.focusOnChange,
+            //autoplay       : theme.strings.slickAuto,
+            //autoplaySpeed  : theme.strings.slickAutoSpeed,
+            autoplay: slickTheme.cache.$hero.data('autoplay'),
+            autoplaySpeed: slickTheme.cache.$hero.data('autoplayspeed'),
+            onInit: this.onInit,
+            onBeforeChange: this.beforeChange,
+            onAfterChange: this.afterChange
+        });
+    };
+    
+    checkFirstOnIndex = function() {
+        if (settings.$element.hasClass('hero--first')){
+            return true;
+        }
+        
+        return false;
+    };
+    
+    onInit = function(obj) {
+        $slider = obj.$slider;
+        $allSlides = $slider.find('.' + slickTheme.vars.slideClass);
+        $activeSlide = $slider.find('.' + slickTheme.vars.activeClass);
+        
+        if (!settings.isTouch){
+            $allSlides.addClass(slickTheme.vars.hiddenClass);
+            $activeSlide.removeClass(slickTheme.vars.hiddenClass);
+        }
+        
+        if (settings.fullscreen){
+            setFullScreen();
+        }
+        
+        if (settings.parallax && Modernizr.csstransforms3d){
+            setParallax();
+        }
+    };
+    
+    beforeChange = function(evt, currentSlide, nextSlide) {
+        if (!settings.isTouch){
+            $allSlides.removeClass(slickTheme.vars.hiddenClass);
+        }
+        
+        // Set upcoming slide as index
+        currentActiveSlide = nextSlide;
+        
+        // Set new active slide to proper parallax position
+        if (settings.parallax && Modernizr.csstransforms3d){
+            calculateParallax(settings.fullscreen, currentActiveSlide);
+        }
+    };
+    
+    afterChange = function() {
+        if (settings.isTouch){
+            return;
+        }
+        
+        $activeSlide = $slider.find('.' + slickTheme.vars.activeClass);
+        $allSlides.addClass(slickTheme.vars.hiddenClass);
+        $activeSlide.removeClass(slickTheme.vars.hiddenClass);
+    };
+    
+    setFullScreen = function() {
+        sizeFullScreen();
+        
+        // Resize hero after screen resize
+        slickTheme.cache.$window.resize(function() {
+            afterResize(
+                function() {
+                    sizeFullScreen();
+                },
+                200,
+                'sizeFullScreen'
+            );
+        });
+    };
+    
+    sizeFullScreen = function() {
+        windowHeight = slickTheme.cache.$window.height();
+        settings.$element.css('height', windowHeight);
+    };
+    
+    setParallax = function() {
+        $heroText = $('.hero__text-content');
+        $heroImage = $('.hero__image');
+        
+        slickTheme.cache.$window.on('scroll', function() {
+            calculateParallax(settings.fullscreen, currentActiveSlide);
+        });
+    };
+    
+    calculateParallax = function(parallaxImage, currentSlide) {
+        scrolled = slickTheme.cache.$window.scrollTop();
+        
+        $($heroText[currentSlide]).css({
+            transform: 'translate3d(0, ' + scrolled / 8 + 'px, 0)'
+        });
+        
+        if (parallaxImage){
+            $($heroImage[currentSlide]).css({
+                transform: 'translate3d(0, ' + scrolled / 8 + 'px, 0)'
+            });
+        }
+    };
+    
+    module = {
+        init: init,
+        onInit: onInit,
+        beforeChange: beforeChange,
+        afterChange: afterChange
+    };
+    
+    return module;
+})(slickTheme || {}, jQuery);
 
+/*
+ * Shopify JS for customizing Slick.js
+ *   http://kenwheeler.github.io/slick/
+ *   Untouched JS in assets/slick.min.js
+ */
+
+/*
+ * Run function after window resize
+ * http://stackoverflow.com/questions/2854407/javascript-jquery-window-resize-how-to-fire-after-the-resize-is-completed
+ */
+export const afterResize = (function() {
+    var t = {};
+    return function(callback, ms, uniqueId) {
+        if (!uniqueId){
+            uniqueId = "Don't call this twice without a uniqueId";
+        }
+        if (t[uniqueId]){
+            clearTimeout(t[uniqueId]);
+        }
+        t[uniqueId] = setTimeout(callback, ms);
+    };
+})();

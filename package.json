@@ -15,8 +15,11 @@
     "breakpoint-slicer": "^2.0.0",
     "chroma-sass": "^1.2.6",
     "compass-mixins": "^0.12.10",
+    "enquire-js": "^0.2.1",
     "jquery": ">=3.3.1",
+    "jquery.equalheights": "^1.5.3",
     "lodash-es": "^4.17.11",
+    "lodash.debounce": "^4.0.8",
     "modernizr": "^3.6.0",
     "modularscale-sass": "^3.0.5",
     "sass-bem-constructor": "^1.1.0",
@@ -24,7 +27,8 @@
     "sass-toolkit": "^2.10.2",
     "sassdash": "^0.9.0",
     "sassytester": "^1.1.0",
-    "shopify-pipeline": "^0.2.3"
+    "shopify-pipeline": "^0.2.3",
+    "slick-carousel": "^1.8.1"
   },
   "repository": {
     "type": "git",
@@ -36,7 +40,6 @@
     ]
   },
   "dependencies": {
-    "enquire-js": "^0.2.1",
     "handlebars": "^4.0.12"
   }
 }
