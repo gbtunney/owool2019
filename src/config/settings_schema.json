@@ -4,8 +4,8 @@
     "theme_name": "Brooklyn",
     "theme_author": "Shopify",
     "theme_version": "11.0.1",
-    "theme_documentation_url": "https://help.shopify.com/manual/using-themes/themes-by-shopify/brooklyn",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/using-themes\/themes-by-shopify\/brooklyn",
+    "theme_support_url": "https:\/\/support.shopify.com\/"
   },
   {
     "name": {
@@ -320,7 +320,7 @@
               "de": "26px",
               "en": "26px",
               "es": "26px",
-              "fr": "26 px",
+              "fr": "26 px",
               "it": "26 px",
               "ja": "26ピクセル",
               "pt-BR": "26px"
@@ -332,7 +332,7 @@
               "de": "28px",
               "en": "28px",
               "es": "28px",
-              "fr": "28 px",
+              "fr": "28 px",
               "it": "28 px",
               "ja": "28ピクセル",
               "pt-BR": "28px"
@@ -344,7 +344,7 @@
               "de": "30px",
               "en": "30px",
               "es": "30px",
-              "fr": "30 px",
+              "fr": "30 px",
               "it": "30 px",
               "ja": "30ピクセル",
               "pt-BR": "30px"
@@ -356,7 +356,7 @@
               "de": "32px",
               "en": "32px",
               "es": "32px",
-              "fr": "32 px",
+              "fr": "32 px",
               "it": "32 px",
               "ja": "32ピクセル",
               "pt-BR": "32px"
@@ -368,7 +368,7 @@
               "de": "34px",
               "en": "34px",
               "es": "34px",
-              "fr": "34 px",
+              "fr": "34 px",
               "it": "34 px",
               "ja": "34ピクセル",
               "pt-BR": "34px"
@@ -546,7 +546,7 @@
               "de": "14px",
               "en": "14px",
               "es": "14px",
-              "fr": "14 px",
+              "fr": "14 px",
               "it": "14 px",
               "ja": "14ピクセル",
               "pt-BR": "14px"
@@ -558,7 +558,7 @@
               "de": "15px",
               "en": "15px",
               "es": "15px",
-              "fr": "15 px",
+              "fr": "15 px",
               "it": "15 px",
               "ja": "15ピクセル",
               "pt-BR": "15px"
@@ -570,7 +570,7 @@
               "de": "16px",
               "en": "16px",
               "es": "16px",
-              "fr": "16 px",
+              "fr": "16 px",
               "it": "16 px",
               "ja": "16ピクセル",
               "pt-BR": "16px"
@@ -582,7 +582,7 @@
               "de": "17px",
               "en": "17px",
               "es": "17px",
-              "fr": "17 px",
+              "fr": "17 px",
               "it": "17 px",
               "ja": "17ピクセル",
               "pt-BR": "17px"
@@ -706,13 +706,13 @@
           "pt-BR": "Imagem"
         },
         "info": {
-          "de": "Wird angezeigt, wenn ein Link in den sozialen Medien geteilt wird. [Mehr Infos](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) über Bild-Miniaturansichten.",
-          "en": "Shown when sharing a link on social media. [Learn more](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) about image thumbnails.",
-          "es": "Aparece cuando se comparte un enlace en una red social. [Más información](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) acerca de las miniaturas",
-          "fr": "Affichée lorsqu'un lien est partagé sur les réseaux sociaux. [En savoir plus](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) à propos des images miniatures.",
-          "it": "Mostrata quando si condivide un link sui social media. [Maggiori informazioni](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) sulle immagini di anteprima.",
-          "ja": "SNSでリンクがシェアされると表示されます。[詳細情報](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/)画像のサムネイルについては、上のリンクを参照してください。",
-          "pt-BR": "Apresentada ao compartilhar um link nas redes sociais. [Saiba mais](https://help.shopify.com/manual/using-themes/troubleshooting/showing-social-media-thumbnail-images/) sobre miniaturas de imagens."
+          "de": "Wird angezeigt, wenn ein Link in den sozialen Medien geteilt wird. [Mehr Infos](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) über Bild-Miniaturansichten.",
+          "en": "Shown when sharing a link on social media. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) about image thumbnails.",
+          "es": "Aparece cuando se comparte un enlace en una red social. [Más información](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) acerca de las miniaturas",
+          "fr": "Affichée lorsqu'un lien est partagé sur les réseaux sociaux. [En savoir plus](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) à propos des images miniatures.",
+          "it": "Mostrata quando si condivide un link sui social media. [Maggiori informazioni](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) sulle immagini di anteprima.",
+          "ja": "SNSでリンクがシェアされると表示されます。[詳細情報](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/)画像のサムネイルについては、上のリンクを参照してください。",
+          "pt-BR": "Apresentada ao compartilhar um link nas redes sociais. [Saiba mais](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) sobre miniaturas de imagens."
         }
       },
       {
@@ -740,13 +740,13 @@
           "pt-BR": "Facebook"
         },
         "info": {
-          "de": "https://www.facebook.com/shopify",
-          "en": "https://www.facebook.com/shopify",
-          "es": "https://www.facebook.com/shopify",
-          "fr": "https://www.facebook.com/shopify",
-          "it": "https://www.facebook.com/shopify",
-          "ja": "https://www.facebook.com/shopify",
-          "pt-BR": "https://www.facebook.com/shopify"
+          "de": "https:\/\/www.facebook.com\/shopify",
+          "en": "https:\/\/www.facebook.com\/shopify",
+          "es": "https:\/\/www.facebook.com\/shopify",
+          "fr": "https:\/\/www.facebook.com\/shopify",
+          "it": "https:\/\/www.facebook.com\/shopify",
+          "ja": "https:\/\/www.facebook.com\/shopify",
+          "pt-BR": "https:\/\/www.facebook.com\/shopify"
         }
       },
       {
@@ -762,13 +762,13 @@
           "pt-BR": "Twitter"
         },
         "info": {
-          "de": "https://twitter.com/shopify",
-          "en": "https://twitter.com/shopify",
-          "es": "https://twitter.com/shopify",
-          "fr": "https://twitter.com/shopify",
-          "it": "https://twitter.com/shopify",
-          "ja": "https://twitter.com/shopify",
-          "pt-BR": "https://twitter.com/shopify"
+          "de": "https:\/\/twitter.com\/shopify",
+          "en": "https:\/\/twitter.com\/shopify",
+          "es": "https:\/\/twitter.com\/shopify",
+          "fr": "https:\/\/twitter.com\/shopify",
+          "it": "https:\/\/twitter.com\/shopify",
+          "ja": "https:\/\/twitter.com\/shopify",
+          "pt-BR": "https:\/\/twitter.com\/shopify"
         }
       },
       {
@@ -784,13 +784,13 @@
           "pt-BR": "Pinterest"
         },
         "info": {
-          "de": "https://www.pinterest.com/shopify",
-          "en": "https://www.pinterest.com/shopify",
-          "es": "https://www.pinterest.com/shopify",
-          "fr": "https://www.pinterest.com/shopify",
-          "it": "https://www.pinterest.com/shopify",
-          "ja": "https://www.pinterest.com/shopify",
-          "pt-BR": "https://www.pinterest.com/shopify"
+          "de": "https:\/\/www.pinterest.com\/shopify",
+          "en": "https:\/\/www.pinterest.com\/shopify",
+          "es": "https:\/\/www.pinterest.com\/shopify",
+          "fr": "https:\/\/www.pinterest.com\/shopify",
+          "it": "https:\/\/www.pinterest.com\/shopify",
+          "ja": "https:\/\/www.pinterest.com\/shopify",
+          "pt-BR": "https:\/\/www.pinterest.com\/shopify"
         }
       },
       {
@@ -806,13 +806,13 @@
           "pt-BR": "Instagram"
         },
         "info": {
-          "de": "https://instagram.com/shopify",
-          "en": "https://instagram.com/shopify",
-          "es": "https://instagram.com/shopify",
-          "fr": "https://instagram.com/shopify",
-          "it": "https://instagram.com/shopify",
-          "ja": "https://instagram.com/shopify",
-          "pt-BR": "https://instagram.com/shopify"
+          "de": "https:\/\/instagram.com\/shopify",
+          "en": "https:\/\/instagram.com\/shopify",
+          "es": "https:\/\/instagram.com\/shopify",
+          "fr": "https:\/\/instagram.com\/shopify",
+          "it": "https:\/\/instagram.com\/shopify",
+          "ja": "https:\/\/instagram.com\/shopify",
+          "pt-BR": "https:\/\/instagram.com\/shopify"
         }
       },
       {
@@ -828,13 +828,13 @@
           "pt-BR": "Snapchat"
         },
         "info": {
-          "de": "https://www.snapchat.com/add/shopify",
-          "en": "https://www.snapchat.com/add/shopify",
-          "es": "https://www.snapchat.com/add/shopify",
-          "fr": "https://www.snapchat.com/add/shopify",
-          "it": "https://www.snapchat.com/add/shopify",
-          "ja": "https://www.snapchat.com/add/shopify",
-          "pt-BR": "https://www.snapchat.com/add/shopify"
+          "de": "https:\/\/www.snapchat.com\/add\/shopify",
+          "en": "https:\/\/www.snapchat.com\/add\/shopify",
+          "es": "https:\/\/www.snapchat.com\/add\/shopify",
+          "fr": "https:\/\/www.snapchat.com\/add\/shopify",
+          "it": "https:\/\/www.snapchat.com\/add\/shopify",
+          "ja": "https:\/\/www.snapchat.com\/add\/shopify",
+          "pt-BR": "https:\/\/www.snapchat.com\/add\/shopify"
         }
       },
       {
@@ -850,13 +850,13 @@
           "pt-BR": "Google Plus"
         },
         "info": {
-          "de": "https://plus.google.com/+shopify",
-          "en": "https://plus.google.com/+shopify",
-          "es": "https://plus.google.com/+shopify",
-          "fr": "https://plus.google.com/+shopify",
-          "it": "https://plus.google.com/+shopify",
-          "ja": "https://plus.google.com/+shopify",
-          "pt-BR": "https://plus.google.com/+shopify"
+          "de": "https:\/\/plus.google.com\/+shopify",
+          "en": "https:\/\/plus.google.com\/+shopify",
+          "es": "https:\/\/plus.google.com\/+shopify",
+          "fr": "https:\/\/plus.google.com\/+shopify",
+          "it": "https:\/\/plus.google.com\/+shopify",
+          "ja": "https:\/\/plus.google.com\/+shopify",
+          "pt-BR": "https:\/\/plus.google.com\/+shopify"
         }
       },
       {
@@ -872,13 +872,13 @@
           "pt-BR": "Tumblr"
         },
         "info": {
-          "de": "http://shopify.tumblr.com",
-          "en": "http://shopify.tumblr.com",
-          "es": "http://shopify.tumblr.com",
-          "fr": "http://shopify.tumblr.com",
-          "it": "http://shopify.tumblr.com",
-          "ja": "http://shopify.tumblr.com",
-          "pt-BR": "http://shopify.tumblr.com"
+          "de": "http:\/\/shopify.tumblr.com",
+          "en": "http:\/\/shopify.tumblr.com",
+          "es": "http:\/\/shopify.tumblr.com",
+          "fr": "http:\/\/shopify.tumblr.com",
+          "it": "http:\/\/shopify.tumblr.com",
+          "ja": "http:\/\/shopify.tumblr.com",
+          "pt-BR": "http:\/\/shopify.tumblr.com"
         }
       },
       {
@@ -894,13 +894,13 @@
           "pt-BR": "YouTube"
         },
         "info": {
-          "de": "https://www.youtube.com/user/shopify",
-          "en": "https://www.youtube.com/user/shopify",
-          "es": "https://www.youtube.com/user/shopify",
-          "fr": "https://www.youtube.com/user/shopify",
-          "it": "https://www.youtube.com/user/shopify",
-          "ja": "https://www.youtube.com/user/shopify",
-          "pt-BR": "https://www.youtube.com/user/shopify"
+          "de": "https:\/\/www.youtube.com\/user\/shopify",
+          "en": "https:\/\/www.youtube.com\/user\/shopify",
+          "es": "https:\/\/www.youtube.com\/user\/shopify",
+          "fr": "https:\/\/www.youtube.com\/user\/shopify",
+          "it": "https:\/\/www.youtube.com\/user\/shopify",
+          "ja": "https:\/\/www.youtube.com\/user\/shopify",
+          "pt-BR": "https:\/\/www.youtube.com\/user\/shopify"
         }
       },
       {
@@ -916,13 +916,13 @@
           "pt-BR": "Vimeo"
         },
         "info": {
-          "de": "https://vimeo.com/shopify",
-          "en": "https://vimeo.com/shopify",
-          "es": "https://vimeo.com/shopify",
-          "fr": "https://vimeo.com/shopify",
-          "it": "https://vimeo.com/shopify",
-          "ja": "https://vimeo.com/shopify",
-          "pt-BR": "https://vimeo.com/shopify"
+          "de": "https:\/\/vimeo.com\/shopify",
+          "en": "https:\/\/vimeo.com\/shopify",
+          "es": "https:\/\/vimeo.com\/shopify",
+          "fr": "https:\/\/vimeo.com\/shopify",
+          "it": "https:\/\/vimeo.com\/shopify",
+          "ja": "https:\/\/vimeo.com\/shopify",
+          "pt-BR": "https:\/\/vimeo.com\/shopify"
         }
       },
       {
@@ -938,13 +938,13 @@
           "pt-BR": "Fancy"
         },
         "info": {
-          "de": "http://fancy.com/Shopify",
-          "en": "http://fancy.com/Shopify",
-          "es": "http://fancy.com/Shopify",
-          "fr": "http://fancy.com/Shopify",
-          "it": "http://fancy.com/Shopify",
-          "ja": "http://fancy.com/Shopify",
-          "pt-BR": "http://fancy.com/Shopify"
+          "de": "http:\/\/fancy.com\/Shopify",
+          "en": "http:\/\/fancy.com\/Shopify",
+          "es": "http:\/\/fancy.com\/Shopify",
+          "fr": "http:\/\/fancy.com\/Shopify",
+          "it": "http:\/\/fancy.com\/Shopify",
+          "ja": "http:\/\/fancy.com\/Shopify",
+          "pt-BR": "http:\/\/fancy.com\/Shopify"
         }
       },
       {
@@ -1027,7 +1027,7 @@
           "de": "Wird auf 32 x 32 Pixel verkleinert.",
           "en": "Will be scaled down to 32 x 32px",
           "es": "Se reducirá a 32 x 32px",
-          "fr": "Sera réduite à 32 x 32 px",
+          "fr": "Sera réduite à 32 x 32 px",
           "it": "Verrà ridimensionata a 32 x 32 pixel.",
           "ja": "32×32ピクセルに縮小されます。",
           "pt-BR": "Será reduzida para 32 x 32 pixels"

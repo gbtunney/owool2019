@@ -1,5 +1,5 @@
 /*eslint-disable */
-
+const theme = window.theme;
 export const timber = (function() {
     
     // Keep this variable private inside this closure scope
@@ -33,7 +33,7 @@ export const timber = (function() {
         
         init: function() {
             timber.initCache();
-            timber.accessibleNav();
+          //  timber.accessibleNav();
             timber.drawersInit();
             timber.responsiveVideos();
             timber.loginForms();
@@ -195,7 +195,7 @@ export const timber = (function() {
         },
         drawersInit: function() {
             timber.LeftDrawer = new timber.Drawers('NavDrawer', 'left');
-            if (theme.settings.cartType === 'drawer'){
+            if (window.themeSettings.cartType === 'drawer'){
                 timber.RightDrawer = new timber.Drawers('CartDrawer', 'right', {
                     onDrawerOpen: ajaxCart.load
                 });

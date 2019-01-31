@@ -5,7 +5,7 @@ import $ from 'jquery';
 jQuery = window.jQuery = $;
 window.$ = $;
 
-export const ShopifyAPI = (function() {
+export const ShopifyAPIbx = (function() {
     
     
     // Expose these functions via an interface while hiding
