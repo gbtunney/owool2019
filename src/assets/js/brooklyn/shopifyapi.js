@@ -1,9 +1,17 @@
 /*eslint-disable */
 
 import $ from 'jquery';
+import handlebars from 'handlebars/dist/handlebars.js';
+import  {testVar,theme} from '../brooklyn/base';
 
 jQuery = window.jQuery = $;
 window.$ = $;
+
+//import {ShopifyAPIbx,ajaxCart,attributeToString} from '../brooklyn/shopifyapi';
+const Handlebars=handlebars;
+
+
+
 
 export const ShopifyAPIbx = (function() {
     
@@ -110,6 +118,7 @@ export const ShopifyAPIbx = (function() {
     }
 })();
 
+const ShopifyAPI = ShopifyAPIbx;
 /*============================================================================
   API Helper Functions
 ==============================================================================*/
@@ -288,7 +297,9 @@ export const ajaxCart = (function(module, $) {
             data = {},
             source = $('#CartTemplate').html(),
             template = Handlebars.compile(source);
-        
+    
+        console.log("compile",Handlebars.compile(source));
+    
         // Add each item to our handlebars.js data
         $.each(cart.items, function(index, cartItem) {
             /* Hack to get product image thumbnail
@@ -487,6 +498,7 @@ export const ajaxCart = (function(module, $) {
         
         if ($numInputs.length){
             $numInputs.each(function() {
+                
                 var $el = $(this),
                     currentQty = $el.val(),
                     inputName = $el.attr('name'),
@@ -550,3 +562,5 @@ export const ajaxCart = (function(module, $) {
     
     return module;
 })(ajaxCart || {}, jQuery);
+
+window.ajaxCart= ajaxCart;

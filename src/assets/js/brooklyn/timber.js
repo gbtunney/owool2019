@@ -1,5 +1,16 @@
 /*eslint-disable */
+import {ShopifyAPIbx,ajaxCart,attributeToString} from '../brooklyn/shopifyapi';
+import $ from 'jquery';
+jQuery=window.jQuery = $;
+window.$ = $;
+
 const theme = window.theme;
+
+
+//console.log("sdsds",theme.variables)
+//import Modernizr from './utilities/modernizr.min.js';
+const ShopifyAPI = ShopifyAPIbx;
+
 export const timber = (function() {
     
     // Keep this variable private inside this closure scope
@@ -33,7 +44,7 @@ export const timber = (function() {
         
         init: function() {
             timber.initCache();
-          //  timber.accessibleNav();
+           // TODO : BREAKS ITtimber.accessibleNav();
             timber.drawersInit();
             timber.responsiveVideos();
             timber.loginForms();
@@ -195,7 +206,9 @@ export const timber = (function() {
         },
         drawersInit: function() {
             timber.LeftDrawer = new timber.Drawers('NavDrawer', 'left');
+          //  alert();
             if (window.themeSettings.cartType === 'drawer'){
+              
                 timber.RightDrawer = new timber.Drawers('CartDrawer', 'right', {
                     onDrawerOpen: ajaxCart.load
                 });
@@ -296,7 +309,6 @@ export const timber = (function() {
             
             Drawer.prototype.init = function() {
                 var $openBtn = $(this.config.open);
-                
                 // Add aria controls
                 $openBtn.attr('aria-expanded', 'false');
                 
@@ -307,7 +319,8 @@ export const timber = (function() {
             Drawer.prototype.open = function(evt) {
                 // Keep track if drawer was opened from a click, or called by another function
                 var externalCall = false;
-                
+                console.log("DDDD");
+    
                 // Other drawers that might be open (will be closed later)
                 var $otherDrawers = $('.drawer').not(this.$drawer);
                 

@@ -11,15 +11,22 @@
     "test": "shopify-pipeline test --coverage"
   },
   "devDependencies": {
+    "@vue/cli": "^3.4.0",
     "breakpoint-sass": "^2.7.1",
     "breakpoint-slicer": "^2.0.0",
     "chroma-sass": "^1.2.6",
     "compass-mixins": "^0.12.10",
+    "css-loader": "^2.1.0",
     "enquire-js": "^0.2.1",
+    "handlebars": "^4.0.12",
     "jquery": ">=3.3.1",
+    "jquery-equalheights": "^1.0.4",
     "jquery.equalheights": "^1.5.3",
+    "lazysizes": "^4.1.5",
+    "lodash": "^4.17.11",
     "lodash-es": "^4.17.11",
     "lodash.debounce": "^4.0.8",
+    "magnific-popup": "^1.1.0",
     "modernizr": "^3.6.0",
     "modularscale-sass": "^3.0.5",
     "sass-bem-constructor": "^1.1.0",
@@ -27,8 +34,12 @@
     "sass-toolkit": "^2.10.2",
     "sassdash": "^0.9.0",
     "sassytester": "^1.1.0",
+    "scrolltofixed": "^1.0.6",
     "shopify-pipeline": "^0.2.3",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "vue-loader": "^15.6.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.22"
   },
   "repository": {
     "type": "git",
@@ -40,6 +51,5 @@
     ]
   },
   "dependencies": {
-    "handlebars": "^4.0.12"
   }
 }

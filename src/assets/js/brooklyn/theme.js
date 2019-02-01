@@ -8,6 +8,11 @@ window.$ = $;
 import enquire from 'enquire-js/main.js';
 import {debounce as _debounce} from 'lodash';
 import handlebars from 'handlebars/dist/handlebars.js';
+import {ShopifyAPIbx,ajaxCart,attributeToString} from '../brooklyn/shopifyapi';
+
+
+const ShopifyAPI = ShopifyAPIbx;
+
 
 var document = window.document;
 export const theme = (function() {
@@ -1316,14 +1321,16 @@ theme.Collection = (function() {
 })();
 
 
+
 theme.HeaderSection = (function() {
     function Header(container) {
+    
         timber.drawersInit();
         theme.initCache();
         theme.fitNav();
         theme.resizeLogo();
         theme.searchModal();
-        
+    
         var $container = (this.$container = $(container));
         this.template = $container.attr('data-template');
         

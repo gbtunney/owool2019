@@ -11,3 +11,43 @@ yarn test
 ```
 
 You can learn more about how to use the CLI here: https://github.com/DynamoMTL/shopify-pipeline#using-the-tool.
+```
+yarn install    (or)
+npm run install
+```
+
+after everything has been installed, install more crap by typing yarn install
+
+
+INSTALLATION BY GILLIAN
+
+-Signup for GitHub
+https://github.com/
+-get sourcetree Sourcetree https://www.sourcetreeapp.com/
+
+install node https://nodejs.org/en/download/
+
+maybe install yarn??
+https://yarnpkg.com/lang/en/docs/install/#mac-stable
+
+Phpstorm
+https://www.jetbrains.com/phpstorm/download/#section=mac
+
+
+Trello?
+Owool stage https://o-wool-stage.myshopify.com/admin/
+Username: gbtunney@mac.com p: Betta$11
+
+jquery
+lazysizes 
+slick-carousel 
+magnific-popup 
+scrolltofixed 
+handlebars 
+lodash
+jquery-equalheights
+lodash + lodash.debounce
+
+Modernizr???? need custom build
+
+

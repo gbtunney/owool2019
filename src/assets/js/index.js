@@ -23,7 +23,7 @@ import enquire from 'enquire-js/main.js';
 //import {theme,slickTheme} from './brooklyn/theme';
 import {timber} from './brooklyn/timber';
 //import {slate} from './brooklyn/slate';
-import  {testVar,theme} from './brooklyn/base';
+import  {theme} from './brooklyn/base';
 import {ShopifyAPIbx,ajaxCart,attributeToString} from './brooklyn/shopifyapi';
 
 //console.log("sdsds",theme.variables)

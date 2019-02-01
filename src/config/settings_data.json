@@ -1,36 +1,36 @@
 {
 	"current": {
 		"color_body_bg": "#ffffff",
-		"color_headings": "#321863",
-		"color_body_text": "#565656",
-		"color_borders": "#5dd2b4",
+		"color_headings": "#222323",
+		"color_body_text": "#222323",
+		"color_borders": "#1c1d1d",
 		"color_button_text": "#ffffff",
-		"color_primary": "#7737BD",
-		"color_secondary": "#058677",
-		"color_product_background": "#fff4f6",
-		"color_sale_tag": "#e80970",
+		"color_primary": "#1c1d1d",
+		"color_secondary": "#a26b25",
+		"color_product_background": "#f7f7f7",
+		"color_sale_tag": "#990000",
 		"color_input": "#f6f6f6",
-		"color_newsletter": "#bde9f2",
-		"color_drawer_background": "#360f5f",
+		"color_newsletter": "#f6f6f6",
+		"color_drawer_background": "#1c1d1d",
 		"color_drawer_text": "#ffffff",
-		"color_drawer_border": "#50297a",
-		"color_drawer_button": "#7737BD",
+		"color_drawer_border": "#343535",
+		"color_drawer_button": "#a26b25",
 		"color_drawer_button_text": "#ffffff",
-		"type_header_family": "quicksand_n7",
-		"type_header_base_size": "38px",
+		"type_header_family": "old_standard_tt_n4",
+		"type_header_base_size": "30px",
 		"type_header_border_thickness": "1px",
-		"type_accent_family": "roboto_n7",
+		"type_accent_family": "montserrat_n6",
 		"type_accent_transform": true,
 		"type_accent_spacing": true,
-		"type_accent_subheadings": false,
-		"type_base_family": "helvetica_n4",
-		"type_base_size": "17px",
-		"type_base_italize_titles": false,
+		"type_accent_subheadings": true,
+		"type_base_family": "arapey_n4",
+		"type_base_size": "16px",
+		"type_base_italize_titles": true,
 		"cart_type": "drawer",
-		"cart_notes_enable": true,
+		"cart_notes_enable": false,
 		"share_image": "",
-		"social_facebook_link": "",
-		"social_twitter_link": "",
+		"social_facebook_link": "http:\/\/facebook.com\/gbtunney",
+		"social_twitter_link": "http:\/\/twitter.com\/gbtunney",
 		"social_pinterest_link": "",
 		"social_instagram_link": "",
 		"social_snapchat_link": "",
@@ -54,8 +54,8 @@
 		"checkout_sidebar_background_color": "#fff4f6",
 		"checkout_heading_font": "Helvetica Neue",
 		"checkout_body_font": "Roboto",
-		"checkout_accent_color": "#7737BD",
-		"checkout_button_color": "#7737BD",
+		"checkout_accent_color": "#a26b25",
+		"checkout_button_color": "#000000",
 		"checkout_error_color": "#f01130",
 		"checkout_banner_background_color": "#fff",
 		"checkout_call_to_action_color": "#a26b25",
@@ -90,7 +90,7 @@
 					"slideshow-0": {
 						"type": "slide",
 						"settings": {
-							"image": "",
+							"image": "shopify:\/\/shop_images\/carousel-item-2.jpg",
 							"color_image_overlay": "#3d4246",
 							"image_overlay_opacity": 25,
 							"slide_subheading": "An introductory",
@@ -102,7 +102,19 @@
 					"slideshow-1": {
 						"type": "slide",
 						"settings": {
-							"image": "",
+							"image": "shopify:\/\/shop_images\/carousel-item-5.jpg",
+							"color_image_overlay": "#3d4246",
+							"image_overlay_opacity": 25,
+							"slide_subheading": "An introductory",
+							"slide_heading": "Hero Banner",
+							"slide_cta": "Shop now",
+							"slide_link": ""
+						}
+					},
+					"1548988358086": {
+						"type": "slide",
+						"settings": {
+							"image": "shopify:\/\/shop_images\/carousel-item-3.jpg",
 							"color_image_overlay": "#3d4246",
 							"image_overlay_opacity": 25,
 							"slide_subheading": "An introductory",
@@ -114,11 +126,12 @@
 				},
 				"block_order": [
 					"slideshow-0",
-					"slideshow-1"
+					"slideshow-1",
+					"1548988358086"
 				],
 				"settings": {
 					"hero_home_auto": true,
-					"home_hero_auto_speed": "5000",
+					"home_hero_auto_speed": "7000",
 					"slide_text_color": "#ffffff",
 					"slide_button_label_color": "#000000",
 					"slide_button_background_color": "#ffffff"
@@ -222,6 +235,34 @@
 					"background_image": "",
 					"background_image_position": "center center"
 				}
+			},
+			"footer": {
+				"type": "footer",
+				"settings": {
+					"footer_link_list": "footer",
+					"show_payment_icons": true
+				}
+			},
+			"1548987933388": {
+				"type": "featured-product",
+				"settings": {
+					"featured_product": "",
+					"show_variant_labels": true,
+					"show_vendor": false,
+					"enable_payment_button": true,
+					"show_share_buttons": true
+				}
+			},
+			"1548988019441": {
+				"type": "featured-row",
+				"settings": {
+					"image": "shopify:\/\/shop_images\/grey-painted-brick-wall.jpg",
+					"layout": "left",
+					"title": "Image with text",
+					"text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
+					"button_label": "Local",
+					"button_link": "shopify:\/\/products\/local"
+				}
 			}
 		},
 		"content_for_index": [
@@ -229,8 +270,10 @@
 			"featured-collections",
 			"featured-products",
 			"newsletter",
+			"1548987933388",
 			"1548898096923",
-			"1548898120993"
+			"1548898120993",
+			"1548988019441"
 		]
 	},
 	"presets": {
