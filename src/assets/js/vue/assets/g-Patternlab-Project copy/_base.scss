@@ -1,0 +1,33 @@
+@import "../g-Patternlab/dependencies";
+@import "variables";
+
+@import "../g-Patternlab/modules/colors/module";
+@import "../g-Patternlab/modules/typography/module";
+@import "../g-Patternlab/modules/rhythm-spacing/module";
+@import "../g-Patternlab/modules/components/module";
+@import "../g-Patternlab/modules/generator/module";
+
+$generate-map: (
+    scheme-classes: true,
+    swatch-classes: true,
+    type-classes:true,
+    rhythm-spacing:true,
+    utility-static:false,
+    components:false
+
+);
+
+//@include test-all-dependencies();
+@include init-color-module;
+
+///todo: do some kind of check to make sure it is initialized bef
+@include init-generator($generate-map);
+
+
+//@debug "light #{color(accent-default,foreground)}";
+//@debug "inverted #{color(dark-accent-default,foreground)}";
+//@debug "inverted #{color(dark-accent-default,background)}";
+
+
+@debug get-scheme-colors-list(alt-light);
+

@@ -17,3 +17,6 @@ ehthumbs.db
 Thumbs.db
 
 config/shopify.yml
+*.
+src/assets/js/vue/assets/g-Patternlab
+src/assets/js/vue/assets

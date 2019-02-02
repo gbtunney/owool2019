@@ -1,0 +1,208 @@
+/*============================================================================
+ VARIABLES FROM BROOKLYN THEME
+==============================================================================*/
+
+$viewportIncrement: 1px;
+$siteWidth: 1050px;
+$small: 590px;
+$medium: 768px;
+$large: 769px;
+$xlarge: $siteWidth + $viewportIncrement;
+
+$postSmall: $small + $viewportIncrement;
+$preMedium: $medium - $viewportIncrement;
+$preLarge: $large - $viewportIncrement;
+
+/*================ The following are dependencies of csswizardry grid ================*/
+$breakpoints: (
+	'small' '(max-width: #{$small})',
+	'medium' '(min-width: #{$postSmall}) and (max-width: #{$medium})',
+	'medium-down' '(max-width: #{$medium})',
+	'large' '(min-width: #{$large})'
+);
+$breakpoint-has-widths: ('small', 'medium', 'medium-down', 'large');
+$breakpoint-has-push:  ('medium', 'medium-down', 'large');
+$breakpoint-has-pull:  ('medium', 'medium-down', 'large');
+
+/*================ Color variables ================*/
+$colorPrimary: #1c1d1d;
+$colorSecondary: #a26b25;
+
+// Button colors
+$colorBtnPrimary: $colorPrimary;
+$colorBtnPrimaryHover: lighten($colorBtnPrimary, 12%);
+$colorBtnPrimaryActive: adaptive-color($colorPrimary, 24%);
+$colorBtnPrimaryText: #ffffff;
+
+$colorBtnSecondary: $colorSecondary;
+$colorBtnSecondaryHover: lighten($colorBtnSecondary, 10%);
+$colorBtnSecondaryActive: adaptive-color($colorSecondary, 10%);
+$colorBtnSecondaryText: #ffffff;
+
+$colorBtnSecondaryAccent: $colorBtnPrimary;
+$colorBtnSecondaryAccentHover: lighten($colorBtnSecondaryAccent, 12%);
+$colorBtnSecondaryAccentActive: adaptive-color($colorBtnSecondaryAccent, 24%);
+
+// Text link colors
+$colorLink: $colorSecondary;
+$colorLinkHover: $colorPrimary;
+
+// Text colors
+$colorTextBody: #222323;
+
+// Heading colors
+$colorHeadings: #222323;
+
+// Backgrounds
+$colorBody: #ffffff;
+$colorProductBackground: #f7f7f7;
+$colorInputBg: #f6f6f6;
+$colorNewsletter: #f6f6f6;
+
+// Border colors
+$colorBorder: #1c1d1d;
+
+// Border size
+$borderWidthHeader: 1px;
+
+// Sale tag color
+$colorSaleTag: #990000;
+
+// Nav and dropdown link background
+$colorNav: $colorBody;
+$colorNavText: $colorHeadings;
+
+// Helper colors
+$disabledGrey: #f6f6f6;
+$disabledBorder: darken($disabledGrey, 25%);
+$errorRed: #d02e2e;
+$errorRedBg: #fff6f6;
+$successGreen: #56ad6a;
+$successGreenBg: #ecfef0;
+
+// Drawer sizes and colors
+$drawerNavWidth: 300px;
+$drawerCartWidth: 300px;
+$drawerCartWidthLarge: 400px; // small-up width
+$drawerHeaderHeight: 80px;
+$drawerCartFooterHeight: 130px; // default, overwritten by JS
+$colorDrawers: #1c1d1d;
+$colorDrawerBorder: #343535;
+$colorDrawerText: #ffffff;
+$colorDrawerButton: #a26b25;
+$colorDrawerButtonText: #ffffff;
+$drawerTransition: 'all 0.35s cubic-bezier(0.46, 0.01 , 0.32, 1)';
+
+// Sizing variables
+$gutter: 30px;
+$gridGutterMobile: 22px;
+$section-spacing-small: 35px;
+$gridGutter: 30px; // can be a %, but nested grids will have smaller margins because of it
+$contentTopMargin: 80px;
+$contentTopMarginSmall: 35px;
+$radius: 0;
+$customSelectHeight: 46px;
+
+// Z-index
+$zindexNavDropdowns: 5;
+$zindexDrawer: 10;
+$zindexHeroHeader: 2;
+$zindexDrawerOverlay: 20;
+
+// Product Collage Grid
+$collageImageXLarge: 670px;
+$collageImageLarge: 520px;
+$collageImageMedium: 310px;
+$collageImageSmall: 230px;
+
+
+
+// Collection Collage Grid
+// These heights are used to determine the row height for the
+// collection grid.
+$collectionCollageRowHeightFull: 450px;
+$collectionCollageRowHeightLarge: 310px;
+$collectionCollageRowHeightSmall: 280px;
+
+// Password page
+$passwordPageUseBgImage: true;
+
+// Section onboarding
+$color-blankstate: rgba($colorTextBody, 0.35);
+$color-blankstate-background: rgba($colorTextBody, 0.10);
+
+/*================ Typography ================*/@font-face {
+	font-family: Montserrat;
+	font-weight: 600;
+	font-style: normal;
+	src: url("https://fonts.shopifycdn.com/montserrat/montserrat_n6.7a3c341961dc23aaabcc116124b80f2a7abec1a2.woff2?&hmac=b92922e1683cc0012e34c7bf8312b5012a94a53fc8c072e1f67c774308ea2f2a") format("woff2"),
+	url("https://fonts.shopifycdn.com/montserrat/montserrat_n6.2c97c1a692c63ad09ab0635cb73b1939c5f417c0.woff?&hmac=8669c660350573f86fd9449c033c017f38297b619f249ae75e106208f636918b") format("woff");
+}
+
+@font-face {
+	font-family: Arapey;
+	font-weight: 400;
+	font-style: normal;
+	src: url("https://fonts.shopifycdn.com/arapey/arapey_n4.2d2866546ce54f39e3baf69f5d944e54b2e0771b.woff2?&hmac=5e984782c9a5779b38a9252cabb94652343a66369566d28d02efa67be50007e1") format("woff2"),
+	url("https://fonts.shopifycdn.com/arapey/arapey_n4.a5bf746bd7b4646dec7a42e0f36c7afe1b3785db.woff?&hmac=da78a26ecfad5d5239dd0ba4f02f6d2289d1c9a4f4d4df4373e5aa19c9650572") format("woff");
+}
+
+@font-face {
+	font-family: "Old Standard TT";
+	font-weight: 400;
+	font-style: normal;
+	src: url("https://fonts.shopifycdn.com/old_standard_tt/oldstandardtt_n4.ee0951721b469828e44903ad5ff5815def33217a.woff2?&hmac=35507c66dac8c9d0310bc940fd487c3bf40fde9c780d7dee7f0614011cbacff7") format("woff2"),
+	url("https://fonts.shopifycdn.com/old_standard_tt/oldstandardtt_n4.481b4779e20f0c9f07603272fe7c673a29ed154f.woff?&hmac=9369407adde49df269bd1700c9e5a23c8d778e617e9a22add69a8d05da5a15a0") format("woff");
+}
+
+
+@font-face {
+	font-family: Arapey;
+	font-weight: 400;
+	font-style: italic;
+	src: url("https://fonts.shopifycdn.com/arapey/arapey_i4.76b9c74110c86df9446495f3b98d8ff62e62229e.woff2?&hmac=5ea2449a9d733566f7d53fba6f6b72afa059dea3edbb5fbcacc885050eeb9f46") format("woff2"),
+	url("https://fonts.shopifycdn.com/arapey/arapey_i4.54a950529ca14266fc22b37574a97a78f656c7bb.woff?&hmac=b70acc49502d135dbafcf4e22c3eaff2e4eac5bc8d919cf9d8da4f68126ff157") format("woff");
+}
+
+
+@font-face {
+	font-family: Montserrat;
+	font-weight: 900;
+	font-style: normal;
+	src: url("https://fonts.shopifycdn.com/montserrat/montserrat_n9.ddaed62de62f3d3d87e64f4d0463dca05fc9c8e4.woff2?&hmac=b67d8128c9fe24e8ae2d92ed67e2a363d0b4e977e559b1f1ff89bd9af63b96fa") format("woff2"),
+	url("https://fonts.shopifycdn.com/montserrat/montserrat_n9.85cc5f32e331fc9b3a109639b08869c64782e161.woff?&hmac=0dad9ff79b5ae51db870d72b5df326b1aa49c5d45832fbf06c7bb8a1bdae96ee") format("woff");
+}
+
+
+// Header Font
+$headerFontStack: "Old Standard TT", serif;
+$headerFontWeight: 400;
+$headerFontStyle: normal;
+$headerBaseFontSize: 30px;
+
+// Body Font
+$bodyFontStack: Arapey, serif;
+$bodyFontWeight: 400;
+$bodyFontWeightBold: 700;
+$bodyFontStyle: normal;
+$baseFontSize: 16px; // Henceforth known as 1em
+
+// Accent Font
+$accentFontStack: Montserrat, sans-serif;
+$accentFontWeight: 600;
+$accentFontWeightBold: 900;
+$accentFontStyle: normal;
+
+@font-face {
+	font-family: 'icons';
+	src: url('//cdn.shopify.com/s/files/1/0084/4044/7094/t/12/assets/icons.eot?8654520613586617613');
+	src: url('//cdn.shopify.com/s/files/1/0084/4044/7094/t/12/assets/icons.eot?8654520613586617613#iefix') format("embedded-opentype"),
+	url('//cdn.shopify.com/s/files/1/0084/4044/7094/t/12/assets/icons.woff?8654520613586617613') format("woff"),
+	url('//cdn.shopify.com/s/files/1/0084/4044/7094/t/12/assets/icons.ttf?8654520613586617613') format("truetype"),
+	url('//cdn.shopify.com/s/files/1/0084/4044/7094/t/12/assets/icons.svg?8654520613586617613#timber-icons') format("svg");
+	font-weight: normal;
+	font-style: normal;
+};
+
+$socialIconFontStack: 'icons';
+

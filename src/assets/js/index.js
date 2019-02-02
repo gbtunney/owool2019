@@ -7,6 +7,13 @@ import $ from 'jquery';
 jQuery=window.jQuery = $;
 window.$ = $;
 
+import {mountVue} from "@vue/mountVue";
+//import ExampleComponent from "@/components/ExampleComponent.vue";
+
+mountVue('#theme-vue-wrapper', ExampleComponent);
+
+
+
 // Utilities
 //import Foo from './utilities/foo'
 import _ from 'lodash';

@@ -8,7 +8,8 @@
     "serve": "shopify-pipeline serve",
     "build": "shopify-pipeline build",
     "deploy": "shopify-pipeline build --deploy",
-    "test": "shopify-pipeline test --coverage"
+    "test": "shopify-pipeline test --coverage",
+    "get-patternlab": "git clone https://github.com/gbtunney/g-Patternlab.git src/assets/sass/g-Patternlab"
   },
   "devDependencies": {
     "@vue/cli": "^3.4.0",
@@ -27,6 +28,7 @@
     "lodash-es": "^4.17.11",
     "lodash.debounce": "^4.0.8",
     "magnific-popup": "^1.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
     "modernizr": "^3.6.0",
     "modularscale-sass": "^3.0.5",
     "sass-bem-constructor": "^1.1.0",
@@ -50,6 +52,5 @@
       "env"
     ]
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

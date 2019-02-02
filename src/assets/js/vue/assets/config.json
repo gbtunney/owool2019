@@ -1,0 +1,192 @@
+{
+	"content-boxed-width": "85%",
+	"content-boxed-width-mobile": "95%",
+	"content-max-width": "1200px",
+	"typekit":"'https://use.typekit.net/kxg6qeb.css'",
+	"render_component_themes": {
+		"light":"Light",
+		"light-alt":"Light Alt",
+		"dark": "Dark",
+		"accent-default":"accent-default",
+		"accent-secondary":"accent-secondary",
+		"accent-primary":"accent-primary",
+		"dark-accent-default":"dark-accent-default",
+		"dark-accent-secondary":"dark-accent-secondary",
+		"dark-accent-primary":"dark-accent-primary"
+	},
+	"social-icon-size":"30px",
+	"baseColors": {
+		"white": "#fff",
+		"black": "#000",
+		"dark-gray": "#585858",
+		"gum-leaf": "#afd2c2",
+		"silver-chalice": "#adadad",
+		"saffron": "#edc433",
+		"light-gray": "#d2d3d2",
+		"oslo-gray": "#8d8f92",
+		"brown-bramble": "#562d19",
+		"kournikova": "#f5cd51",
+		"copper": "#b97131",
+		"kilamanjaro": "#3e3030",
+		"slugger": "#432e2e",
+		"silverleaf": "#71b799",
+		"fuscous_gray": "#555",
+		"lightning_yellow": "#eec517",
+		"tana": "#bdba9c",
+		"khaki": "#f0e68c",
+		"west-coast": "#64551f",
+		"highball": "#90813b",
+		"sandstone": "#7b6d5c",
+		"schooner": "#8b8378",
+		"spice": "#66543e",
+		"madras": "#4c3b25",
+		"onion": "#33250d",
+		"woodrush": "#332915",
+		"jacko-bean": "#2e1c08",
+		"acadia": "#1e1205",
+		"crowshead": "#1a130a"
+	},
+	"active-scheme": "light",
+	"schemes": [
+		{
+			"key": "light",
+			"description": "'The main light on dark theme.'",
+			"parent": false,
+			"colors": {
+				"foreground": "fuscous_gray",
+				"background": "white",
+				"accent": "gum-leaf",
+				"border": "fuscous_gray",
+				"link": "gum-leaf"
+			}
+		},
+		{
+			"key": "light-alt",
+			"description": "'The main light on dark theme.'",
+			"parent": "light",
+			"colors": {
+				"accent": "lightning_yellow",
+				"link": "lightning_yellow"
+			}
+		},
+		{
+			"key": "accent-default",
+			"description": "'light grey foreground'",
+			"parent": "light",
+			"colors": {
+				"foreground": "oslo-gray",
+				"border": "oslo-gray"
+			}
+		},
+		{
+			"key": "accent-primary",
+			"description": "'light mint foreground'",
+			"parent": "light",
+			"colors": {
+				"foreground": "gum-leaf",
+				"border": "gum-leaf"
+			}
+		},
+		{
+			"key": "accent-secondary",
+			"description": "'light yellow foreground'",
+			"parent": "light",
+			"colors": {
+				"foreground": "lightning_yellow",
+				"border": "lightning_yellow"
+			}
+		},
+		{
+			"key": "dark",
+			"description": "'inverted'",
+			"parent": "light",
+			"invert" : "true"
+		},
+		{
+			"key": "dark-accent-default",
+			"description": "'light grey background'",
+			"parent": "accent-default",
+			"invert" : "true"
+		},
+		{
+			"key": "dark-accent-secondary",
+			"description": "'inverted'",
+			"parent": "accent-secondary",
+			"invert" : "true"
+		},
+		{
+			"key": "dark-accent-primary",
+			"description": "'inverted'",
+			"parent": "accent-primary",
+			"invert" : "true"
+		},
+		{
+			"key": "alt-light",
+			"description": "'DARK THEME!!'",
+			"parent": "light",
+			"colors": {
+				"foreground": "fuscous_gray",
+				"background": "white",
+				"accent": "lightning_yellow",
+				"border": "lightning_yellow",
+				"link":"lightning_yellow"
+			}
+		}
+	],
+	"typography": {
+		"required-props": "'font-family, letter-spacing, word-spacing, text-transform, text-decoration, font-style, font-weight'",
+		"line-height": 1.3,
+		"modularscale": {
+			"base": "20px",
+			"ratio": 1.2,
+			"sm": {
+				"base": "25px",
+				"ratio": 1.2
+			}
+		},
+		"fonts": {
+			"default": {
+				"font-family": "monospace",
+				"text-transform": "none",
+				"text-decoration": "none",
+				"letter-spacing": 0,
+				"word-spacing": "-1px",
+				"font-weight": "normal",
+				"font-style": "normal"
+			},
+			"font-san-serif": {
+				"font-family": "cronos-pro-display",
+				"letter-spacing":"0px",
+				"title": "'Primary: Mr Eaves Sans'"
+			},
+			"font-serif": {
+				"font-family": "adobe-garamond-pro",
+				"title": "'Secondary, Headers : Mrs Eaves'"
+			},
+			"font-serif-italic": {
+				"font-family": "adobe-garamond-pro",
+				"title": "'italic serif'",
+				"font-style": "italic"
+			},
+			"font-serif-bold": {
+				"font-family": "adobe-garamond-pro",
+				"title": "'bold serif'",
+				"font-weight": "700"
+			},
+			"font-small-caps": {
+				"font-family": "adobe-garamond-pro",
+				"text-transform": "uppercase",
+				"title": "'Accent, Small Caps : Mrs Eaves Roman Small Caps'"
+			}
+		}
+	},
+	"slicer": {
+		"breakpoints": "0 480px 768px 992px 1200px",
+		"breakpoint-names": "xs sm md lg"
+	},
+	"bem-block-namespaces": {
+		"object": "o",
+		"component": "g",
+		"utility": "u"
+	}
+}

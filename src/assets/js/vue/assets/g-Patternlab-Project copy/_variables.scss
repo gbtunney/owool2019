@@ -1,0 +1,129 @@
+$TEST-DEPENDANCIES:true;
+$chroma-active-scheme:light;
+$baseColors: (
+    white: #fff,
+    black: #000,
+    dark-gray: #585858,
+    gum-leaf: #afd2c2,
+    silver-chalice: #adadad,
+    saffron: #edc433,
+    light-gray: #d2d3d2,
+    oslo-gray: #8d8f92,
+    brown-bramble: #562d19,
+    kournikova: #f5cd51,
+    copper: #b97131,
+    kilamanjaro: #3e3030,
+    slugger: #432e2e,
+    silverleaf: #71b799,
+    fuscous-gray: #555,
+    lightning-yellow: #eec517,
+    tana: #bdba9c,
+    khaki: #f0e68c,
+    west-coast: #64551f,
+    highball: #90813b,
+    sandstone: #7b6d5c,
+    schooner: #8b8378,
+    spice: #66543e,
+    madras: #4c3b25,
+    onion: #33250d,
+    woodrush: #332915,
+    jacko-bean: #2e1c08,
+    acadia: #1e1205,
+    crowshead: #1a130a
+);
+
+$schemes: (
+    light: (
+        key: light,
+        description: 'The main light on dark theme.',
+        parent: false,
+        colors:(
+            foreground: fuScous_gray,
+            background: white,
+            accent: gum-leaf,
+            border: fuscous_gray,
+            link: gum-leaf
+        )
+    ),
+    light-alt: (
+        key: light-alt,
+        description: 'The main light on dark theme, extended',
+        parent: light,
+        colors:(
+            accent: lightning-yellow,
+            link: lightning-yellow
+        )
+    ),
+    accent-default:(
+        key: accent-default,
+        description: 'light grey foreground',
+        parent: light,
+        colors:(
+            foreground: oslo-gray,
+
+            border: oslo-gray
+        )
+    ),
+    accent-primary: (
+        key: accent-primary,
+        description: 'light mint foreground',
+        parent: light,
+        colors:(
+            foreground: gum-leaf,
+            border: gum-leaf
+        )
+    ),
+    accent-secondary: (
+        key: accent-secondary,
+        description: 'light yellow foreground',
+        parent: light,
+        colors:(
+            foreground: lightning-yellow,
+            border: lightning-yellow
+        )
+    ),
+    dark:  (
+        key: dark,
+        description: 'inverted',
+        parent: light,
+        transform:inverted,
+        colors:()
+    ),
+    dark-accent-default:(
+        key: dark-accent-default,
+        description: 'light grey background',
+        parent: accent-default,
+        transform:inverted,
+        colors:()
+    ),
+    dark-accent-secondary: (
+        key: dark-accent-secondary,
+        description: 'inverted',
+        parent: accent-secondary,
+        transform:inverted,
+        colors:()
+    ),
+    dark-accent-primary : (
+        key: dark-accent-primary,
+        description: 'inverted',
+        parent: accent-primary,
+        transform:inverted,
+        colors:()
+    ),
+    alt-light:(
+        key: alt-light,
+        description: 'DARK THEME!!',
+        parent: accent-secondary,
+        transform:inverted,
+
+        colors: (
+            foreground: fuscous_gray,
+            background: white,
+            accent: lightning-yellow,
+            border: lightning-yellow,
+            link:lightning-yellow,
+            random:white
+        )
+    )
+);
+

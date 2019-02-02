@@ -1,10 +1,8 @@
+@import "brooklyn/brooklyn";
+
 @import 'modules/foo';
 
 body {
   background-color: pink;
   //display: none!important;
 }
-
-@import "theme";
-@import "timber";
-
