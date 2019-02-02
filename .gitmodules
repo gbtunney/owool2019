@@ -1,3 +1,6 @@
 [submodule "src/assets/sass/patternlab"]
 	path = src/assets/sass/patternlab
 	url = https://github.com/gbtunney/g-Patternlab.git
+[submodule "src/assets/sass/g-Patternlab"]
+	path = src/assets/sass/g-Patternlab
+	url = https://github.com/gbtunney/g-Patternlab.git
